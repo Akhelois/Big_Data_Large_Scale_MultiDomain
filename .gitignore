@@ -2,3 +2,8 @@ neo4j.txt
 .env
 /.streamlit
 /agent
+/frontend/node_modules/
+/frontend/dist/
+/frontend/__pycache__/
+/backend/__pycache__/
+/backend/model/dataset/
