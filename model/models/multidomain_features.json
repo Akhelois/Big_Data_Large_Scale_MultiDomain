@@ -1,0 +1,18 @@
+{
+  "numeric": [
+    "Metric_Activity",
+    "Metric_Peak",
+    "Metric_Variation",
+    "Throughput_Metric"
+  ],
+  "classifier": [
+    "Metric_Activity",
+    "Metric_Peak",
+    "Metric_Variation",
+    "Throughput_Metric",
+    "Domain_IoT",
+    "Domain_Linux",
+    "Domain_Network",
+    "Domain_Windows"
+  ]
+}

@@ -1,0 +1,27 @@
+.chart-card {
+    background: #ffffff;
+    border: 1px solid #e2e6e9;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(25, 39, 52, 0.035);
+}
+
+.chart-card-header {
+    padding: 18px 20px 0;
+}
+
+.chart-card-title {
+    color: #25333d;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.chart-card-description {
+    color: #7c878f;
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+.chart-card-content {
+    padding: 8px 12px 12px;
+}

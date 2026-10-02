@@ -1,0 +1,67 @@
+services:
+  # Frontend (Streamlit)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: streamlit_frontend
+    ports:
+      - "1234:1234"
+    volumes:
+      - ./frontend:/app
+
+  # Hadoop namenode untuk HDFS (Biar jalan juga datanodenya)
+  namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    container_name: namenode
+    restart: unless-stopped
+    ports:
+      - "9870:9870"
+      - "9000:9000"
+    environment:
+      CLUSTER_NAME: hadoop
+      CORE_CONF_fs_defaultFS: "hdfs://namenode:9000"
+      HDFS_CONF_dfs_permissions_enabled: "false"
+      HDFS_CONF_dfs_namenode_rpc___bind___host: "0.0.0.0"
+    volumes:
+      - namenode_data:/hadoop/dfs/name
+
+  datanode:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: datanode
+    restart: unless-stopped
+    depends_on:
+      - namenode
+    ports:
+      - "9864:9864"
+      - "9866:9866"
+    environment:
+      CLUSTER_NAME: hadoop
+      CORE_CONF_fs_defaultFS: "hdfs://namenode:9000"
+      SERVICE_PRECONDITION: "namenode:9870"
+      HDFS_CONF_dfs_datanode_address: "0.0.0.0:9866"
+      HDFS_CONF_dfs_datanode_http_address: "0.0.0.0:9864"
+      HDFS_CONF_dfs_datanode_hostname: "10.38.10.84"
+    volumes:
+      - datanode_data:/hadoop/dfs/data
+
+  # Notebook buat sih jupiter
+  notebook:
+    build:
+      context: ./model
+      dockerfile: Dockerfile
+    container_name: jupyter_notebook
+    ports:
+      - "8888:8888"
+      - "4040:4040"
+    volumes:
+      - ./model:/home/jovyan/work
+    working_dir: /home/jovyan/work
+    depends_on:
+      - namenode
+      - datanode
+
+# Definisikan volume persistent agar data Hadoop tidak hilang saat docker dimatikan
+volumes:
+  namenode_data:
+  datanode_data:

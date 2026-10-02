@@ -1,0 +1,41 @@
+.stat-card {
+    background: #ffffff;
+    border: 1px solid #e2e6e9;
+    border-radius: 10px;
+    padding: 19px 20px;
+    min-height: 116px;
+    box-shadow: 0 2px 5px rgba(25, 39, 52, 0.035);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    background: #77928a;
+}
+
+.stat-label {
+    color: #77828b;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.stat-value {
+    color: #25333d;
+    font-size: 27px;
+    line-height: 1;
+    font-weight: 700;
+    margin-top: 12px;
+    letter-spacing: -0.5px;
+}
+
+.stat-description {
+    color: #8a949b;
+    font-size: 11px;
+    margin-top: 7px;
+}

@@ -7,3 +7,6 @@ neo4j.txt
 /frontend/__pycache__/
 /backend/__pycache__/
 /backend/model/dataset/
+/model/dataset/
+__pycache__/
+*.py[cod]

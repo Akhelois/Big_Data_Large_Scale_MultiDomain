@@ -1,0 +1,9 @@
+dataset/
+models/
+spark_checkpoints/
+*.parquet
+*.csv
+*.png
+*.ipynb
+.env
+.env.*

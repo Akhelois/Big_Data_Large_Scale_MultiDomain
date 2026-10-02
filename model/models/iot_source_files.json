@@ -1,0 +1,51 @@
+[
+  {
+    "file": "IoT_Fridge.csv",
+    "rows_used": 10000,
+    "numeric_features_used": [
+      "fridge_temperature"
+    ]
+  },
+  {
+    "file": "IoT_GPS_Tracker.csv",
+    "rows_used": 10000,
+    "numeric_features_used": [
+      "latitude",
+      "longitude"
+    ]
+  },
+  {
+    "file": "IoT_Modbus.csv",
+    "rows_used": 10000,
+    "numeric_features_used": [
+      "FC1_Read_Input_Register",
+      "FC2_Read_Discrete_Value",
+      "FC3_Read_Holding_Register",
+      "FC4_Read_Coil"
+    ]
+  },
+  {
+    "file": "IoT_Motion_Light.csv",
+    "rows_used": 10000,
+    "numeric_features_used": [
+      "motion_status"
+    ]
+  },
+  {
+    "file": "IoT_Thermostat.csv",
+    "rows_used": 10000,
+    "numeric_features_used": [
+      "current_temperature",
+      "thermostat_status"
+    ]
+  },
+  {
+    "file": "IoT_Weather.csv",
+    "rows_used": 10000,
+    "numeric_features_used": [
+      "temperature",
+      "pressure",
+      "humidity"
+    ]
+  }
+]

@@ -1,0 +1,11 @@
+# Keep Spark on the stable 3.5 line (PySpark 4.2 bundles Hadoop 3.5 client jars).
+pyspark==3.5.9
+pandas>=2.0.0
+matplotlib>=3.7.0
+seaborn>=0.13.0
+networkx>=3.1
+neo4j>=5.15.0
+python-dotenv>=1.0.0
+findspark>=2.0.1
+pyarrow>=18.0.0
+scikit-learn>=1.3

@@ -1,0 +1,20 @@
+.app-layout {
+  min-height: 100vh;
+}
+
+.main-content {
+  margin-left: 250px;
+  min-height: 100vh;
+  background: #f3f5f7;
+}
+
+.page-container {
+  padding: 34px 38px 56px;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+@media (max-width: 800px) {
+  .main-content { margin-left: 0; }
+  .page-container { padding: 24px 18px 40px; }
+}
