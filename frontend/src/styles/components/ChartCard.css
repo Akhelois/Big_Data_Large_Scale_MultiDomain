@@ -1,27 +1,43 @@
 .chart-card {
-    background: #ffffff;
-    border: 1px solid #e2e6e9;
-    border-radius: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
     overflow: hidden;
-    box-shadow: 0 2px 6px rgba(25, 39, 52, 0.035);
+    box-shadow: var(--shadow-sm);
 }
 
 .chart-card-header {
     padding: 18px 20px 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
 }
 
 .chart-card-title {
-    color: #25333d;
-    font-size: 15px;
-    font-weight: 700;
+    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 600;
 }
 
 .chart-card-description {
-    color: #7c878f;
-    font-size: 11px;
-    margin-top: 4px;
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-top: 3px;
+    line-height: 1.4;
 }
 
 .chart-card-content {
-    padding: 8px 12px 12px;
+    padding: 12px 16px 16px;
+}
+
+@media (max-width: 720px) {
+    .chart-card-header {
+        padding: 14px 14px 0;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .chart-card-content {
+        padding: 10px 10px 12px;
+    }
 }

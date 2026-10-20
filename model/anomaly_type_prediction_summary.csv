@@ -1,0 +1,66 @@
+Domain,Framework,Attack_Type,Actual_Count,Predicted_Count,Precision,Recall,F1,Split
+Multidomain,Spark MLlib,backdoor,0,5,0.0,0.0,0.0,held-out source files
+Multidomain,Spark MLlib,ddos,7737,9879,0.6575564328373317,0.8396019128861316,0.7375113533151679,held-out source files
+Multidomain,Spark MLlib,dos,263,504,0.041666666666666664,0.07984790874524715,0.05475880052151238,held-out source files
+Multidomain,Spark MLlib,injection,1212,54,0.8888888888888888,0.039603960396039604,0.07582938388625592,held-out source files
+Multidomain,Spark MLlib,mitm,1,0,0.0,0.0,0.0,held-out source files
+Multidomain,Spark MLlib,password,2613,31,0.5483870967741935,0.006505931879066207,0.012859304084720122,held-out source files
+Multidomain,Spark MLlib,scanning,3413,8551,0.23190270143842825,0.5810137708760621,0.33149448345035104,held-out source files
+Multidomain,Spark MLlib,xss,2180,18,0.8333333333333334,0.006880733944954129,0.01364877161055505,held-out source files
+Multidomain,scikit-learn,backdoor,0,17,0.0,0.0,0.0,held-out source files
+Multidomain,scikit-learn,ddos,7737,9541,0.6871397128183628,0.8473568566627891,0.7588841301076513,held-out source files
+Multidomain,scikit-learn,dos,263,965,0.00932642487046632,0.034220532319391636,0.014657980456026058,held-out source files
+Multidomain,scikit-learn,injection,1212,803,0.3549190535491905,0.23514851485148514,0.28287841191067,held-out source files
+Multidomain,scikit-learn,mitm,1,106,0.0,0.0,0.0,held-out source files
+Multidomain,scikit-learn,password,2613,3560,0.3938202247191011,0.5365480290853425,0.45423618985906367,held-out source files
+Multidomain,scikit-learn,scanning,3413,3565,0.2732117812061711,0.28537943158511575,0.27916308397821726,held-out source files
+Multidomain,scikit-learn,xss,2180,1296,0.38425925925925924,0.22844036697247708,0.286536248561565,held-out source files
+IoT,Spark MLlib,backdoor,110,0,0.0,0.0,0.0,held-out source files
+IoT,Spark MLlib,ddos,40,0,0.0,0.0,0.0,held-out source files
+IoT,Spark MLlib,injection,31,0,0.0,0.0,0.0,held-out source files
+IoT,Spark MLlib,password,118,0,0.0,0.0,0.0,held-out source files
+IoT,Spark MLlib,ransomware,10,0,0.0,0.0,0.0,held-out source files
+IoT,Spark MLlib,xss,7,0,0.0,0.0,0.0,held-out source files
+IoT,scikit-learn,backdoor,110,0,0.0,0.0,0.0,held-out source files
+IoT,scikit-learn,ddos,40,0,0.0,0.0,0.0,held-out source files
+IoT,scikit-learn,injection,31,0,0.0,0.0,0.0,held-out source files
+IoT,scikit-learn,password,118,0,0.0,0.0,0.0,held-out source files
+IoT,scikit-learn,ransomware,10,0,0.0,0.0,0.0,held-out source files
+IoT,scikit-learn,scanning,0,386,0.0,0.0,0.0,held-out source files
+IoT,scikit-learn,xss,7,0,0.0,0.0,0.0,held-out source files
+Linux,Spark MLlib,ddos,122,0,0.0,0.0,0.0,held-out source files
+Linux,Spark MLlib,dos,107,0,0.0,0.0,0.0,held-out source files
+Linux,Spark MLlib,injection,60,0,0.0,0.0,0.0,held-out source files
+Linux,Spark MLlib,mitm,1,0,0.0,0.0,0.0,held-out source files
+Linux,Spark MLlib,password,78,0,0.0,0.0,0.0,held-out source files
+Linux,scikit-learn,ddos,122,485,0.041237113402061855,0.16393442622950818,0.06589785831960461,held-out source files
+Linux,scikit-learn,dos,107,137,0.029197080291970802,0.037383177570093455,0.032786885245901634,held-out source files
+Linux,scikit-learn,injection,60,233,0.02145922746781116,0.08333333333333333,0.034129692832764506,held-out source files
+Linux,scikit-learn,mitm,1,8,0.0,0.0,0.0,held-out source files
+Linux,scikit-learn,password,78,303,0.0231023102310231,0.08974358974358974,0.036745406824146974,held-out source files
+Linux,scikit-learn,scanning,0,1125,0.0,0.0,0.0,held-out source files
+Linux,scikit-learn,xss,0,667,0.0,0.0,0.0,held-out source files
+Network,Spark MLlib,ddos,12373,12325,0.8783772819472616,0.8749696920714459,0.8766701757227305,held-out source files
+Network,Spark MLlib,dos,0,9,0.0,0.0,0.0,held-out source files
+Network,Spark MLlib,injection,1092,170,0.9764705882352941,0.152014652014652,0.26307448494453245,held-out source files
+Network,Spark MLlib,password,0,114,0.0,0.0,0.0,held-out source files
+Network,Spark MLlib,scanning,3298,4168,0.4560940499040307,0.5764099454214675,0.5092418965979104,held-out source files
+Network,Spark MLlib,xss,0,113,0.0,0.0,0.0,held-out source files
+Network,scikit-learn,ddos,12373,12851,0.8772079993774804,0.9110967429079447,0.8938312718046304,held-out source files
+Network,scikit-learn,dos,0,4,0.0,0.0,0.0,held-out source files
+Network,scikit-learn,injection,1092,863,0.4646581691772885,0.36721611721611724,0.410230179028133,held-out source files
+Network,scikit-learn,password,0,1372,0.0,0.0,0.0,held-out source files
+Network,scikit-learn,scanning,3298,832,0.8413461538461539,0.21224984839296543,0.3389830508474576,held-out source files
+Network,scikit-learn,xss,0,908,0.0,0.0,0.0,held-out source files
+Windows,Spark MLlib,backdoor,5,4,1.0,0.8,0.888888888888889,random row split (source-file holdout unavailable)
+Windows,Spark MLlib,ddos,4,2,1.0,0.5,0.6666666666666666,random row split (source-file holdout unavailable)
+Windows,Spark MLlib,password,5,4,0.75,0.6,0.6666666666666665,random row split (source-file holdout unavailable)
+Windows,Spark MLlib,scanning,1,0,0.0,0.0,0.0,random row split (source-file holdout unavailable)
+Windows,Spark MLlib,xss,0,1,0.0,0.0,0.0,random row split (source-file holdout unavailable)
+Windows,scikit-learn,backdoor,5,4,1.0,0.8,0.888888888888889,random row split (source-file holdout unavailable)
+Windows,scikit-learn,ddos,4,1,1.0,0.25,0.4,random row split (source-file holdout unavailable)
+Windows,scikit-learn,dos,0,2,0.0,0.0,0.0,random row split (source-file holdout unavailable)
+Windows,scikit-learn,injection,0,2,0.0,0.0,0.0,random row split (source-file holdout unavailable)
+Windows,scikit-learn,password,5,3,0.6666666666666666,0.4,0.5,random row split (source-file holdout unavailable)
+Windows,scikit-learn,scanning,1,1,1.0,1.0,1.0,random row split (source-file holdout unavailable)
+Windows,scikit-learn,xss,0,1,0.0,0.0,0.0,random row split (source-file holdout unavailable)

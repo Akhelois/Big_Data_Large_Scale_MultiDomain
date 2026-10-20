@@ -4,3 +4,4 @@ pandas
 python-dotenv
 pydantic
 neo4j>=5.15
+psutil

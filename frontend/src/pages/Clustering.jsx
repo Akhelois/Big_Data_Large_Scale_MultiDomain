@@ -23,15 +23,10 @@ function Clustering({ selectedDomain }) {
         async function loadClusters() {
             try {
                 setLoading(true);
-
                 const response = await getClusters();
-
                 if (response.status !== "success") {
-                    throw new Error(
-                        response.message || "Failed to load clustering data"
-                    );
+                    throw new Error(response.message || "Failed to load clustering data");
                 }
-
                 setData(response.data || []);
             } catch (err) {
                 setError(err.message);
@@ -39,28 +34,24 @@ function Clustering({ selectedDomain }) {
                 setLoading(false);
             }
         }
-
         loadClusters();
     }, []);
 
-    const visibleData = data.filter((row) => selectedDomain === "All Domains" || row.Domain_Type === selectedDomain);
+    const visibleData = data.filter(
+        (row) => selectedDomain === "All Domains" || row.Domain_Type === selectedDomain
+    );
+
     const chartData = visibleData.map((row) => ({
         ...row,
-        clusterLabel: `${row.Domain_Type} - ${row.cluster}`,
+        clusterLabel: `${row.Domain_Type} - C${row.cluster}`,
         Records: Number(row.Records || 0)
     }));
 
     if (loading) {
         return (
             <div className="page-content">
-                <SectionHeader
-                    title="Clustering"
-                    description="Cluster analysis generated from the machine learning pipeline."
-                />
-
-                <div className="loading-state">
-                    Loading clustering data...
-                </div>
+                <SectionHeader title="Clustering" description="Cluster analysis generated from the machine learning pipeline." />
+                <div className="loading-state">Loading clustering data...</div>
             </div>
         );
     }
@@ -68,51 +59,29 @@ function Clustering({ selectedDomain }) {
     if (error) {
         return (
             <div className="page-content">
-                <SectionHeader
-                    title="Clustering"
-                    description="Cluster analysis generated from the machine learning pipeline."
-                />
-
-                <div className="error-state">
-                    Failed to load clustering data: {error}
-                </div>
+                <SectionHeader title="Clustering" description="Cluster analysis generated from the machine learning pipeline." />
+                <div className="error-state">Failed to load clustering data: {error}</div>
             </div>
         );
     }
 
     return (
         <div className="page-content">
-            <SectionHeader
-                title="Clustering"
-                description="Cluster analysis generated from the machine learning pipeline."
-            />
+            <SectionHeader title="Clustering" description="Cluster analysis generated from the machine learning pipeline." />
 
-            <ChartCard
-                title="Cluster Distribution"
-                description="Number of records assigned to each cluster."
-            >
+            <ChartCard title="Cluster Distribution" description="Number of records assigned to each cluster.">
                 {chartData.length === 0 ? (
-                    <div className="empty-state">
-                        No clustering data available.
-                    </div>
+                    <div className="empty-state">No clustering data available.</div>
                 ) : (
-                    <div className="chart-wrapper">
-                        <ResponsiveContainer width="100%" height={320}>
-                            <BarChart data={chartData}>
-                                <CartesianGrid stroke="#e9edeb" vertical={false} />
-
-                                <XAxis
-                                    dataKey="clusterLabel"
-                                />
-
-                                <YAxis />
-
-                                <Tooltip />
-
-                                <Bar dataKey="Records" name="Records" fill="#718b81" radius={[4, 4, 0, 0]} />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </div>
+                    <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={chartData} margin={{ top: 12, right: 12, left: 0, bottom: 4 }}>
+                            <CartesianGrid stroke="#eef0f4" vertical={false} />
+                            <XAxis dataKey="clusterLabel" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
+                            <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
+                            <Tooltip contentStyle={{ borderRadius: 8, border: "1px solid #e5e8ed", fontSize: 12 }} />
+                            <Bar dataKey="Records" name="Records" fill="#2563eb" radius={[4, 4, 0, 0]} />
+                        </BarChart>
+                    </ResponsiveContainer>
                 )}
             </ChartCard>
 
@@ -120,36 +89,26 @@ function Clustering({ selectedDomain }) {
                 <div className="table-header">
                     <div>
                         <h3>Cluster Summary</h3>
-                        <p>
-                            Summary statistics generated by the clustering model.
-                        </p>
+                        <p>Summary statistics generated by the clustering model.</p>
                     </div>
                 </div>
-
                 <div className="table-container">
                     {visibleData.length === 0 ? (
-                        <div className="empty-state">
-                            No cluster summary available.
-                        </div>
+                        <div className="empty-state">No cluster summary available.</div>
                     ) : (
-                        <table>
+                        <table className="data-table">
                             <thead>
                                 <tr>
-                                    {Object.keys(visibleData[0]).map((column) => (
-                                        <th key={column}>
-                                            {column}
-                                        </th>
+                                    {Object.keys(visibleData[0]).map((col) => (
+                                        <th key={col}>{col}</th>
                                     ))}
                                 </tr>
                             </thead>
-
                             <tbody>
-                                {visibleData.map((row, index) => (
-                                    <tr key={index}>
-                                        {Object.keys(visibleData[0]).map((column) => (
-                                            <td key={column}>
-                                                {row[column] ?? "-"}
-                                            </td>
+                                {visibleData.map((row, idx) => (
+                                    <tr key={idx}>
+                                        {Object.keys(visibleData[0]).map((col) => (
+                                            <td key={col}>{row[col] ?? "-"}</td>
                                         ))}
                                     </tr>
                                 ))}

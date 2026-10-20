@@ -41,6 +41,10 @@ export async function getAttackPredictions() {
     return request("/anomaly/predictions");
 }
 
+export async function getAnomalyLog() {
+    return request("/anomaly/log");
+}
+
 export async function getNeo4jAnalytics() {
     return request("/neo4j/analytics");
 }
@@ -48,4 +52,20 @@ export async function getNeo4jAnalytics() {
 
 export async function getClusters() {
     return request("/clustering");
+}
+
+export async function getMonitoringHosts() {
+    return request("/monitoring/hosts");
+}
+
+export async function getMonitoringSummary() {
+    return request("/monitoring/summary");
+}
+
+export async function getMonitoringHistory(hostId, minutes = 60) {
+    return request(`/monitoring/history?host=${encodeURIComponent(hostId)}&minutes=${minutes}`);
+}
+
+export async function getMonitoringAnomalies(limit = 50) {
+    return request(`/monitoring/anomalies?limit=${limit}`);
 }

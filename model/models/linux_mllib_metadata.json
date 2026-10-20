@@ -1,0 +1,24 @@
+{
+  "framework": "Apache Spark MLlib",
+  "features": [
+    "Metric_Activity",
+    "Metric_Peak",
+    "Metric_Variation",
+    "Throughput_Metric"
+  ],
+  "split": "held-out source files",
+  "k": 2,
+  "anomaly_method": "K-Means squared distance; threshold fitted on train quantile",
+  "anomaly_quantile": 0.95,
+  "anomaly_threshold": 2.545925319078238,
+  "attack_type_labels": [
+    "normal",
+    "dos",
+    "ddos",
+    "injection",
+    "password",
+    "scanning",
+    "xss",
+    "mitm"
+  ]
+}

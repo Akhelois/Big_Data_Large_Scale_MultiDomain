@@ -3,6 +3,7 @@ from pathlib import Path
 import pandas as pd
 
 from app.core.config import PERFORMANCE_FILE
+from app.utils.dataframe import dataframe_to_records
 
 
 def get_performance():
@@ -18,11 +19,7 @@ def get_performance():
 
     df = pd.read_csv(PERFORMANCE_FILE)
 
-    df = df.where(pd.notna(df), None)
-
-    data = df.to_dict(orient="records")
-
     return {
         "status": "success",
-        "data": data,
+        "data": dataframe_to_records(df),
     }

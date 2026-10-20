@@ -7,11 +7,18 @@ import ModelPerformance from "./pages/ModelPerformance";
 import AnomalyDetection from "./pages/AnomalyDetection";
 import Clustering from "./pages/Clustering";
 import Neo4jAnalytics from "./pages/Neo4jAnalytics";
+import PcMonitoring from "./pages/PcMonitoring";
 import "./App.css";
 
 function App() {
   const [activePage, setActivePage] = useState("Overview");
   const [selectedDomain, setSelectedDomain] = useState("All Domains");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const handleNavigate = (page) => {
+    setActivePage(page);
+    setSidebarOpen(false);
+  };
 
   const renderPage = () => {
     const props = {
@@ -22,6 +29,8 @@ function App() {
     switch (activePage) {
       case "Overview":
         return <Overview {...props} />;
+      case "PC Monitoring":
+        return <PcMonitoring />;
       case "Dataset":
         return <Dataset {...props} />;
       case "Model Performance":
@@ -39,9 +48,14 @@ function App() {
 
   return (
     <div className="app-layout">
+      <div
+        className={`sidebar-overlay ${sidebarOpen ? "show" : ""}`}
+        onClick={() => setSidebarOpen(false)}
+      />
       <Sidebar
         activePage={activePage}
-        setActivePage={setActivePage}
+        setActivePage={handleNavigate}
+        open={sidebarOpen}
       />
 
       <main className="main-content">
@@ -49,6 +63,7 @@ function App() {
           activePage={activePage}
           selectedDomain={selectedDomain}
           setSelectedDomain={setSelectedDomain}
+          onMenuClick={() => setSidebarOpen((v) => !v)}
         />
 
         <div className="page-container">

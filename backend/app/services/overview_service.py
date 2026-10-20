@@ -5,6 +5,7 @@ from app.core.config import (
     PERFORMANCE_FILE,
     CLUSTER_SUMMARY_FILE,
 )
+from app.utils.dataframe import dataframe_to_records
 
 
 def get_overview():
@@ -21,14 +22,7 @@ def get_overview():
             DATASET_SUMMARY_FILE
         )
 
-        dataset_df = dataset_df.where(
-            pd.notna(dataset_df),
-            None
-        )
-
-        dataset_data = dataset_df.to_dict(
-            orient="records"
-        )
+        dataset_data = dataframe_to_records(dataset_df)
 
         if "Records" in dataset_df.columns:
             total_records = int(

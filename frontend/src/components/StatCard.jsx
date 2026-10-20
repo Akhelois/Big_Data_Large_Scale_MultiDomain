@@ -1,27 +1,24 @@
 import "../styles/components/StatCard.css";
 
-function StatCard({
-  label,
-  value,
-  description
-}) {
-  return (
-    <div className="stat-card">
-      <div className="stat-label">
-        {label}
-      </div>
+function StatCard({ label, value, description, icon: Icon }) {
+    return (
+        <div className="stat-card">
+            <div className="stat-label">
+                {Icon && (
+                    <span className="stat-icon">
+                        <Icon size={13} />
+                    </span>
+                )}
+                {label}
+            </div>
 
-      <div className="stat-value">
-        {value}
-      </div>
+            <div className="stat-value">{value}</div>
 
-      {description && (
-        <div className="stat-description">
-          {description}
+            {description && (
+                <div className="stat-description">{description}</div>
+            )}
         </div>
-      )}
-    </div>
-  );
+    );
 }
 
 export default StatCard;

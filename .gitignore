@@ -10,3 +10,6 @@ neo4j.txt
 /model/dataset/
 __pycache__/
 *.py[cod]
+/backend/monitoring_data.db
+/backend/monitoring_data.db-shm
+/backend/monitoring_data.db-wal
