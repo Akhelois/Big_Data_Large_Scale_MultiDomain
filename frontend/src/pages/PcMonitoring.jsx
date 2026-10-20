@@ -24,6 +24,7 @@ import {
 
 import {
     getMonitoringAnomalies,
+    getMonitoringCorrelation,
     getMonitoringHistory,
     getMonitoringHosts,
     getMonitoringSummary
@@ -58,6 +59,82 @@ const metricLabel = (metric) => ({
     mem_percent: "RAM",
     disk_percent: "Disk"
 }[metric] || metric);
+
+const CORR_LABELS = {
+    cpu_percent: "CPU %",
+    mem_percent: "RAM %",
+    mem_used_gb: "RAM GB",
+    disk_percent: "Disk %",
+    disk_used_gb: "Disk GB",
+    net_recv_kbps: "Net ↓",
+    net_sent_kbps: "Net ↑"
+};
+
+function corrColor(v) {
+    // interpola biru (positif) - abu terang (0) - merah (negatif)
+    const clamp = Math.max(-1, Math.min(1, v));
+    if (clamp >= 0) {
+        const a = 0.15 + clamp * 0.85;
+        return `rgba(37, 99, 235, ${a.toFixed(2)})`;
+    }
+    const a = 0.15 + Math.abs(clamp) * 0.85;
+    return `rgba(220, 38, 38, ${a.toFixed(2)})`;
+}
+
+function HostCorrelationHeatmap({ host }) {
+    const [corr, setCorr] = useState(null);
+
+    useEffect(() => {
+        let active = true;
+        getMonitoringCorrelation(host)
+            .then((res) => { if (active) setCorr(res.data || null); })
+            .catch(() => {});
+        return () => { active = false; };
+    }, [host]);
+
+    if (!corr || !corr.columns?.length) {
+        return <div className="empty-cell">Menunggu cukup snapshot metrik untuk menghitung korelasi...</div>;
+    }
+
+    return (
+        <div style={{ overflowX: "auto" }}>
+            <table className="data-table" style={{ minWidth: 480 }}>
+                <thead>
+                    <tr>
+                        <th></th>
+                        {corr.columns.map((c) => (
+                            <th key={c} style={{ textAlign: "center" }}>{CORR_LABELS[c] || c}</th>
+                        ))}
+                    </tr>
+                </thead>
+                <tbody>
+                    {corr.columns.map((rowC, i) => (
+                        <tr key={rowC}>
+                            <td className="strong">{CORR_LABELS[rowC] || rowC}</td>
+                            {corr.matrix[i].map((v, j) => (
+                                <td
+                                    key={j}
+                                    style={{
+                                        background: corrColor(v),
+                                        color: Math.abs(v) > 0.55 ? "#ffffff" : "inherit",
+                                        textAlign: "center",
+                                        fontWeight: i === j ? 700 : 500
+                                    }}
+                                    title={`${CORR_LABELS[rowC]} vs ${CORR_LABELS[corr.columns[j]]}: r=${v}`}
+                                >
+                                    {v.toFixed(2)}
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+            <p className="monitor-footnote" style={{ borderTop: "none", paddingTop: 8, marginTop: 0 }}>
+                Korelasi Pearson dari {corr.n.toLocaleString("id-ID")} snapshot live host <strong>{corr.hostname || "-"}</strong>. Biru = positif, merah = negatif.
+            </p>
+        </div>
+    );
+}
 
 function PcMonitoring() {
     const [hosts, setHosts] = useState([]);
@@ -354,6 +431,13 @@ function PcMonitoring() {
                                 ) : (
                                     <div className="empty-state">Belum ada data jaringan.</div>
                                 )}
+                            </ChartBlock>
+
+                            <ChartBlock
+                                title="Korelasi metrik host (live)"
+                                description={`Dihitung ulang dari snapshot monitoring terbaru${selected ? ` — ${selected.hostname}` : ""}`}
+                            >
+                                <HostCorrelationHeatmap host={selectedHost} />
                             </ChartBlock>
 
                             <div className="table-card">

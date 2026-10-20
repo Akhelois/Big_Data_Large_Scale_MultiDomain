@@ -47,6 +47,15 @@ def summary():
     return {"status": "success", "data": monitoring_service.get_summary()}
 
 
+@router.get("/correlation")
+def correlation(host: str = ""):
+    """Heatmap korelasi metrik host (live, dari snapshot monitoring terakhir)."""
+    return {
+        "status": "success",
+        "data": monitoring_service.get_host_correlation(host or None),
+    }
+
+
 @router.get("/anomalies")
 def anomalies(limit: int = 50, host: str = ""):
     """Log anomali metrik sistem (CPU/RAM/disk melewati batas, dan pemulihan)."""

@@ -353,6 +353,49 @@ def get_history(host_id: str, minutes: int = 60) -> list[dict]:
     return history
 
 
+def get_host_correlation(host_id: str | None = None) -> dict:
+    """Matriks korelasi Pearson metrik host dari snapshot live (untuk heatmap dashboard)."""
+    import pandas as pd
+
+    conn = _get_conn()
+    if host_id:
+        row = conn.execute(
+            "SELECT host_id FROM hosts WHERE host_id = ?", (host_id,)
+        ).fetchone()
+        target = row[0] if row else None
+    else:
+        row = conn.execute(
+            "SELECT host_id FROM hosts WHERE last_seen IS NOT NULL ORDER BY last_seen DESC LIMIT 1"
+        ).fetchone()
+        target = row[0] if row else None
+    if not target:
+        return {"columns": [], "matrix": [], "n": 0, "hostname": None}
+
+    df = pd.read_sql_query(
+        """
+        SELECT cpu_percent, mem_percent, mem_used_gb, disk_percent, disk_used_gb,
+               net_recv_kbps, net_sent_kbps
+        FROM metrics WHERE host_id = ? AND cpu_percent IS NOT NULL
+        """,
+        conn,
+        params=(target,),
+    )
+    df = df.dropna()
+    if len(df) < 3:
+        return {"columns": [], "matrix": [], "n": int(len(df)), "hostname": None}
+
+    corr = df.corr(numeric_only=True)
+    hostname_row = conn.execute(
+        "SELECT hostname FROM hosts WHERE host_id = ?", (target,)
+    ).fetchone()
+    return {
+        "columns": list(corr.columns),
+        "matrix": [[round(float(v), 3) for v in row] for row in corr.values],
+        "n": int(len(df)),
+        "hostname": hostname_row[0] if hostname_row else None,
+    }
+
+
 def get_summary() -> dict:
     """Ringkasan: jumlah host aktif (last_seen < 2 menit), rata-rata CPU/mem host aktif."""
     conn = _get_conn()

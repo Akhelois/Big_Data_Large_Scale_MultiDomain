@@ -54,6 +54,10 @@ export async function getClusters() {
     return request("/clustering");
 }
 
+export async function getClusteringScatter(refresh = false) {
+    return request(`/clustering/scatter${refresh ? "?refresh=1" : ""}`);
+}
+
 export async function getMonitoringHosts() {
     return request("/monitoring/hosts");
 }
@@ -68,4 +72,9 @@ export async function getMonitoringHistory(hostId, minutes = 60) {
 
 export async function getMonitoringAnomalies(limit = 50) {
     return request(`/monitoring/anomalies?limit=${limit}`);
+}
+
+export async function getMonitoringCorrelation(host) {
+    const q = host ? `?host=${encodeURIComponent(host)}` : "";
+    return request(`/monitoring/correlation${q}`);
 }
