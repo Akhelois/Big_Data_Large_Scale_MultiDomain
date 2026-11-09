@@ -4,7 +4,6 @@
     border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
-    justify-content: space-between;
     padding: 0 32px;
     position: sticky;
     top: 0;
@@ -36,19 +35,6 @@
     .topbar {
         padding: 0 16px;
     }
-
-    .topbar-context,
-    .topbar-chevron {
-        display: none;
-    }
-
-    .profile-info {
-        display: none;
-    }
-
-    .topbar-actions {
-        gap: 12px;
-    }
 }
 
 .topbar-title {
@@ -61,85 +47,4 @@
     color: var(--text-primary);
     font-size: 14px;
     font-weight: 600;
-}
-
-.topbar-separator {
-    color: var(--border);
-    font-size: 16px;
-    font-weight: 300;
-}
-
-.topbar-context {
-    color: var(--text-muted);
-    font-size: 13px;
-}
-
-.topbar-actions {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.domain-filter {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.filter-label {
-    color: var(--text-muted);
-    font-size: 12px;
-    font-weight: 500;
-}
-
-.domain-filter select {
-    border: 1px solid var(--border);
-    background: var(--bg);
-    color: var(--text-primary);
-    padding: 6px 28px 6px 10px;
-    border-radius: var(--radius-sm);
-    font-size: 12px;
-    font-weight: 500;
-    outline: none;
-    cursor: pointer;
-    transition: border-color 0.15s, box-shadow 0.15s;
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-}
-
-.domain-filter select:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
-}
-
-.profile {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-}
-
-.profile-avatar {
-    width: 32px;
-    height: 32px;
-    background: var(--accent);
-    color: #ffffff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.profile-name {
-    color: var(--text-primary);
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.profile-role {
-    color: var(--text-muted);
-    font-size: 11px;
-    margin-top: 1px;
 }

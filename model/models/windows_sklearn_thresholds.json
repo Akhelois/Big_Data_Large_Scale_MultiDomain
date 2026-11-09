@@ -1,0 +1,6 @@
+{
+  "scope": "global",
+  "thresholds": {
+    "__all__": 0.5
+  }
+}

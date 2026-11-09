@@ -8,6 +8,9 @@ import AnomalyDetection from "./pages/AnomalyDetection";
 import Clustering from "./pages/Clustering";
 import Neo4jAnalytics from "./pages/Neo4jAnalytics";
 import PcMonitoring from "./pages/PcMonitoring";
+import IotMonitoring from "./pages/IotMonitoring";
+import NetworkMonitoring from "./pages/NetworkMonitoring";
+import ApiDocs from "./pages/ApiDocs";
 import "./App.css";
 
 function App() {
@@ -31,6 +34,10 @@ function App() {
         return <Overview {...props} />;
       case "PC Monitoring":
         return <PcMonitoring />;
+      case "IoT Monitoring":
+        return <IotMonitoring {...props} />;
+      case "Network Monitoring":
+        return <NetworkMonitoring {...props} />;
       case "Dataset":
         return <Dataset {...props} />;
       case "Model Performance":
@@ -41,6 +48,8 @@ function App() {
         return <Clustering {...props} />;
       case "Neo4j Analytics":
         return <Neo4jAnalytics />;
+      case "API Docs":
+        return <ApiDocs />;
       default:
         return <Overview {...props} />;
     }
@@ -56,13 +65,13 @@ function App() {
         activePage={activePage}
         setActivePage={handleNavigate}
         open={sidebarOpen}
+        selectedDomain={selectedDomain}
+        setSelectedDomain={setSelectedDomain}
       />
 
       <main className="main-content">
         <Topbar
           activePage={activePage}
-          selectedDomain={selectedDomain}
-          setSelectedDomain={setSelectedDomain}
           onMenuClick={() => setSidebarOpen((v) => !v)}
         />
 

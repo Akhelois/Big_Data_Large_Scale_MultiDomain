@@ -90,6 +90,17 @@
     overflow-x: auto;
 }
 
+.table-container.scroll-y {
+    max-height: 420px;
+    overflow-y: auto;
+}
+
+.table-container.scroll-y .data-table th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
 .data-table {
     width: 100%;
     border-collapse: collapse;
@@ -215,7 +226,7 @@ table tbody tr:hover td {
     transition: width 0.4s ease;
 }
 
-.metric-bar-fill.good { background: #2563eb; }
+.metric-bar-fill.good { background: #0f766e; }
 .metric-bar-fill.mid { background: #d97706; }
 .metric-bar-fill.low { background: #dc2626; }
 
@@ -301,7 +312,7 @@ table tbody tr:hover td {
 
 .monitor-refresh:hover {
     background: var(--bg);
-    border-color: #d1d5db;
+    border-color: #d6d3d1;
 }
 
 .monitor-footnote {
@@ -315,7 +326,7 @@ table tbody tr:hover td {
 
 .analysis-note {
     background: var(--accent-soft);
-    border: 1px solid #bfdbfe;
+    border: 1px solid #99f6e4;
     border-radius: var(--radius);
     padding: 14px 16px;
     display: flex;
@@ -341,17 +352,16 @@ table tbody tr:hover td {
 .analysis-note h3 {
     font-size: 13px;
     font-weight: 600;
-    color: #1e40af;
+    color: #115e59;
     margin-bottom: 4px;
 }
 
 .analysis-note p {
     font-size: 12px;
-    color: #3b82f6;
+    color: #0d9488;
     line-height: 1.5;
 }
 
-/* ===== PC Monitoring page ===== */
 .badge-online,
 .badge-offline {
     display: inline-flex;
@@ -408,7 +418,6 @@ table tbody tr:hover td {
     font-size: 11px;
 }
 
-/* ===== Anomaly log ===== */
 .log-badge {
     display: inline-flex;
     align-items: center;
@@ -454,7 +463,6 @@ table tbody tr:hover td {
     background: var(--accent);
 }
 
-/* ===== PC Monitoring ===== */
 .host-row {
     cursor: pointer;
 }
@@ -500,14 +508,22 @@ table tbody tr:hover td {
     cursor: pointer;
     appearance: none;
     -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a8a29e' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 8px center;
 }
 
 .pm-select:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    box-shadow: 0 0 0 3px rgba(15,118,110,0.1);
+}
+
+.api-docs-frame {
+    width: 100%;
+    height: 720px;
+    border: 0;
+    display: block;
+    background: var(--surface);
 }
 
 .empty-cell {
@@ -516,7 +532,6 @@ table tbody tr:hover td {
     padding: 24px 14px !important;
 }
 
-/* ===== Graph analysis ===== */
 .graph-legend {
     display: flex;
     flex-wrap: wrap;

@@ -16,8 +16,8 @@ import SectionHeader from "../components/SectionHeader";
 import { getDataset } from "../api/dashboardApi";
 import "../styles/pages/Pages.css";
 
-const tickStyle = { fontSize: 12, fill: "#9ca3af" };
-const tooltipStyle = { borderRadius: 8, border: "1px solid #e5e8ed", fontSize: 12 };
+const tickStyle = { fontSize: 12, fill: "#a8a29e" };
+const tooltipStyle = { borderRadius: 8, border: "1px solid #e7e5e3", fontSize: 12 };
 
 function Dataset({ selectedDomain }) {
     const [dataset, setDataset] = useState([]);
@@ -30,7 +30,7 @@ function Dataset({ selectedDomain }) {
                 setLoading(true);
                 const response = await getDataset();
                 if (response.status !== "success") {
-                    throw new Error(response.message || "Failed to load dataset");
+                    throw new Error(response.message || "Gagal memuat dataset");
                 }
                 setDataset(response.data || []);
             } catch (err) {
@@ -62,8 +62,8 @@ function Dataset({ selectedDomain }) {
     if (loading) {
         return (
             <div className="page-content">
-                <SectionHeader title="Dataset Explorer" description="Dataset coverage and source-file composition." />
-                <div className="loading-state">Loading dataset data...</div>
+                <SectionHeader title="Eksplorasi Dataset" description="Cakupan dataset dan komposisi file sumber." />
+                <div className="loading-state">Memuat data dataset...</div>
             </div>
         );
     }
@@ -71,61 +71,61 @@ function Dataset({ selectedDomain }) {
     if (error) {
         return (
             <div className="page-content">
-                <SectionHeader title="Dataset Explorer" description="Dataset coverage and source-file composition." />
-                <div className="error-state">Failed to load dataset: {error}</div>
+                <SectionHeader title="Eksplorasi Dataset" description="Cakupan dataset dan komposisi file sumber." />
+                <div className="error-state">Gagal memuat dataset: {error}</div>
             </div>
         );
     }
 
     return (
         <div className="page-content">
-            <SectionHeader title="Dataset Explorer" description="Dataset coverage and source-file composition." />
+            <SectionHeader title="Eksplorasi Dataset" description="Cakupan dataset dan komposisi file sumber." />
 
             <div className="stats-grid">
-                <StatCard icon={LuDatabase} label="Records" value={totalRecords.toLocaleString()} description="Records included" />
-                <StatCard icon={LuFileText} label="Files" value={totalFiles} description="Source datasets" />
-                <StatCard icon={LuLayers} label="Domains" value={filteredDomains.length} description="Available environments" />
+                <StatCard icon={LuDatabase} label="Data" value={totalRecords.toLocaleString()} description="Total data" />
+                <StatCard icon={LuFileText} label="File" value={totalFiles} description="Dataset sumber" />
+                <StatCard icon={LuLayers} label="Domain" value={filteredDomains.length} description="Lingkungan yang tersedia" />
             </div>
 
-            <SectionHeader title="Dataset Distribution" description="File and record distribution by domain." />
+            <SectionHeader title="Distribusi Dataset" description="Distribusi file dan data per domain." />
 
             <div className="chart-grid two">
-                <ChartCard title="Files per Domain" description="Number of source files per domain.">
+                <ChartCard title="File per Domain" description="Jumlah file sumber per domain.">
                     {filteredDomains.length ? (
                         <ResponsiveContainer width="100%" height={300}>
                             <BarChart data={filteredDomains} margin={{ top: 12, right: 12, left: 0, bottom: 4 }}>
-                                <CartesianGrid stroke="#eef0f4" vertical={false} />
+                                <CartesianGrid stroke="#eae8e4" vertical={false} />
                                 <XAxis dataKey="domain" axisLine={false} tickLine={false} tick={tickStyle} />
                                 <YAxis axisLine={false} tickLine={false} allowDecimals={false} tick={tickStyle} />
                                 <Tooltip contentStyle={tooltipStyle} />
-                                <Bar dataKey="files" name="Files" fill="#2563eb" radius={[4, 4, 0, 0]} />
+                                <Bar dataKey="files" name="Files" fill="#0f766e" radius={[4, 4, 0, 0]} />
                             </BarChart>
                         </ResponsiveContainer>
                     ) : (
-                        <div className="empty-state">No dataset files for this selection.</div>
+                        <div className="empty-state">Tidak ada file dataset untuk pilihan ini.</div>
                     )}
                 </ChartCard>
 
-                <ChartCard title="Records per Domain" description="Number of processed records per domain.">
+                <ChartCard title="Data per Domain" description="Jumlah data yang diproses per domain.">
                     {filteredDomains.length ? (
                         <ResponsiveContainer width="100%" height={300}>
                             <BarChart data={filteredDomains} margin={{ top: 12, right: 12, left: 0, bottom: 4 }}>
-                                <CartesianGrid stroke="#eef0f4" vertical={false} />
+                                <CartesianGrid stroke="#eae8e4" vertical={false} />
                                 <XAxis dataKey="domain" axisLine={false} tickLine={false} tick={tickStyle} />
                                 <YAxis axisLine={false} tickLine={false} tick={tickStyle} />
                                 <Tooltip contentStyle={tooltipStyle} />
-                                <Bar dataKey="records" name="Records" fill="#0d9488" radius={[4, 4, 0, 0]} />
+                                <Bar dataKey="records" name="Data" fill="#0d9488" radius={[4, 4, 0, 0]} />
                             </BarChart>
                         </ResponsiveContainer>
                     ) : (
-                        <div className="empty-state">No dataset files for this selection.</div>
+                        <div className="empty-state">Tidak ada file dataset untuk pilihan ini.</div>
                     )}
                 </ChartCard>
             </div>
 
             {filteredFiles.length > 0 && (
                 <>
-                    <SectionHeader title="Source Files" description="Files included in the current dataset." />
+                    <SectionHeader title="File Sumber" description="File yang termasuk dalam dataset saat ini." />
 
                     <div className="table-card">
                         <div className="table-container">
@@ -133,8 +133,8 @@ function Dataset({ selectedDomain }) {
                                 <thead>
                                     <tr>
                                         <th>Domain</th>
-                                        <th>Source File</th>
-                                        <th>Records</th>
+                                        <th>File Sumber</th>
+                                        <th>Data</th>
                                     </tr>
                                 </thead>
                                 <tbody>

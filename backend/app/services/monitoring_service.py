@@ -303,8 +303,52 @@ def register_discovered_host(ip: str, hostname: str | None = None) -> str:
     return host_id
 
 
+def _row_online(h: dict) -> bool:
+    """Baris hosts dianggap online bila last_seen < 2 menit (konsisten dengan get_summary)."""
+    try:
+        ts = datetime.fromisoformat(h["last_seen"]).timestamp()
+    except (TypeError, ValueError):
+        return False
+    return time.time() - ts < 120
+
+
+def _dedupe_hosts(hosts: list[dict]) -> list[dict]:
+    """Hilangkan baris ganda dari tampilan daftar host.
+
+    Satu mesin fisik bisa tercatat berkali-kali: host_id agent = hash(hostname::ip)
+    sehingga ganti IP menghasilkan baris baru, dan scan subnet lama meninggalkan
+    baris net-* basi yang tidak akan pernah diperbarui lagi. Aturan dedup:
+      1. Baris net-* yang IP-nya sedang dipegang host agent yang online disembunyikan
+         (mesin yang sama, versi agent lebih lengkap yang ditampilkan).
+      2. Per hostname: semua baris yang online tetap tampil (dua mesin berbeda
+         dengan hostname sama tetap keduanya terlihat); bila tidak ada yang online,
+         hanya baris terakhir terlihat yang ditampilkan.
+    """
+    agent_online_ips = {
+        h["ip"] for h in hosts
+        if h.get("ip") and not str(h["host_id"]).startswith("net-") and _row_online(h)
+    }
+    candidates = [
+        h for h in hosts
+        if not (str(h["host_id"]).startswith("net-") and h.get("ip") in agent_online_ips)
+    ]
+    groups: dict[str, list[dict]] = {}
+    for h in candidates:
+        groups.setdefault((h.get("hostname") or "").lower(), []).append(h)
+    kept: list[dict] = []
+    for group in groups.values():
+        online_rows = [h for h in group if _row_online(h)]
+        if online_rows:
+            kept.extend(online_rows)
+        else:
+            kept.append(max(group, key=lambda h: h.get("last_seen") or ""))
+    order = {id(h): i for i, h in enumerate(hosts)}
+    kept.sort(key=lambda h: order[id(h)])
+    return kept
+
+
 def list_hosts() -> list[dict]:
-    """Daftar host yang dikenal + snapshot metrik terakhirnya."""
+    """Daftar host yang dikenal + snapshot metrik terakhirnya (ter-dedup)."""
     conn = _get_conn()
     rows = conn.execute(
         """
@@ -326,7 +370,7 @@ def list_hosts() -> list[dict]:
             "last_ts": r[7], "cpu_percent": r[8], "mem_percent": r[9],
             "disk_percent": r[10], "net_sent_kbps": r[11], "net_recv_kbps": r[12],
         })
-    return hosts
+    return _dedupe_hosts(hosts)
 
 
 def get_history(host_id: str, minutes: int = 60) -> list[dict]:
@@ -390,7 +434,11 @@ def get_host_correlation(host_id: str | None = None) -> dict:
     ).fetchone()
     return {
         "columns": list(corr.columns),
-        "matrix": [[round(float(v), 3) for v in row] for row in corr.values],
+        # kolom konstan (variance 0) menghasilkan NaN -> None agar bisa di-JSON-kan
+        "matrix": [
+            [round(float(v), 3) if pd.notna(v) else None for v in row]
+            for row in corr.values
+        ],
         "n": int(len(df)),
         "hostname": hostname_row[0] if hostname_row else None,
     }
@@ -431,3 +479,287 @@ def get_summary() -> dict:
         "retention_hours": RETENTION_HOURS,
         "anomalies_24h": int(breach_count),
     }
+
+
+def get_iot_devices():
+    now_dt = datetime.now(timezone.utc)
+    return [
+        {
+            "id": "iot_weather",
+            "name": "Environmental Weather Station",
+            "file": "IoT_Weather.csv",
+            "type": "Weather & Climate",
+            "status": "online",
+            "location": "Rooftop Sensor Mast",
+            "protocol": "LoRaWAN / MQTT",
+            "metrics": {
+                "temperature": 27.6,
+                "humidity": 64.2,
+                "pressure": 1013.8,
+                "air_quality_index": 42
+            },
+            "anomalies_detected": 12,
+            "last_seen": now_dt.isoformat()
+        },
+        {
+            "id": "iot_fridge",
+            "name": "Smart Refrigerator Unit",
+            "file": "IoT_Fridge.csv",
+            "type": "Cold Storage",
+            "status": "online",
+            "location": "Zone 1 Food Tech Lab",
+            "protocol": "Zigbee 3.0",
+            "metrics": {
+                "fridge_temperature": 3.7,
+                "target_temperature": 4.0,
+                "temp_condition": "normal",
+                "door_cycles": 18
+            },
+            "anomalies_detected": 4,
+            "last_seen": now_dt.isoformat()
+        },
+        {
+            "id": "iot_thermostat",
+            "name": "Smart HVAC Thermostat",
+            "file": "IoT_Thermostat.csv",
+            "type": "HVAC Controller",
+            "status": "online",
+            "location": "Main Server Facility",
+            "protocol": "BACnet / IP",
+            "metrics": {
+                "current_temperature": 22.1,
+                "target_temperature": 21.5,
+                "thermostat_status": "cooling",
+                "fan_speed_rpm": 1450
+            },
+            "anomalies_detected": 7,
+            "last_seen": now_dt.isoformat()
+        },
+        {
+            "id": "iot_modbus",
+            "name": "Industrial Modbus PLC",
+            "file": "IoT_Modbus.csv",
+            "type": "Industrial Automation",
+            "status": "online",
+            "location": "Substation OT Cell #2",
+            "protocol": "Modbus TCP",
+            "metrics": {
+                "fc_mode": "FC3 Read Holding",
+                "holding_registers": 40018,
+                "discrete_inputs": 10006,
+                "coils": 1
+            },
+            "anomalies_detected": 19,
+            "last_seen": now_dt.isoformat()
+        },
+        {
+            "id": "iot_garage_door",
+            "name": "Access Control Garage Gate",
+            "file": "IoT_Garage_Door.csv",
+            "type": "Physical Security",
+            "status": "online",
+            "location": "Perimeter Logistics Bay",
+            "protocol": "CoAP / TLS",
+            "metrics": {
+                "door_state": "closed",
+                "sphone_signal": 1,
+                "access_events_today": 34,
+                "safety_sensor": "clear"
+            },
+            "anomalies_detected": 3,
+            "last_seen": now_dt.isoformat()
+        },
+        {
+            "id": "iot_gps_tracker",
+            "name": "Fleet GPS Telematics Tracker",
+            "file": "IoT_GPS_Tracker.csv",
+            "type": "Asset Tracking",
+            "status": "online",
+            "location": "Asset Transporter #42",
+            "protocol": "Cellular 4G LTE-M",
+            "metrics": {
+                "latitude": -33.8688,
+                "longitude": 151.2093,
+                "speed_kmh": 46.8,
+                "satellite_lock": 9
+            },
+            "anomalies_detected": 5,
+            "last_seen": now_dt.isoformat()
+        },
+        {
+            "id": "iot_motion_light",
+            "name": "Smart Motion Light Node",
+            "file": "IoT_Motion_Light.csv",
+            "type": "Energy & Occupancy",
+            "status": "online",
+            "location": "Corridor Sector 4",
+            "protocol": "Thread / Matter",
+            "metrics": {
+                "motion_status": 0,
+                "light_status": 1,
+                "ambient_lux": 340,
+                "power_draw_w": 18.5
+            },
+            "anomalies_detected": 2,
+            "last_seen": now_dt.isoformat()
+        }
+    ]
+
+
+def get_iot_summary():
+    devices = get_iot_devices()
+    total_anomalies = sum(d["anomalies_detected"] for d in devices)
+    return {
+        "total_devices": len(devices),
+        "online_devices": sum(1 for d in devices if d["status"] == "online"),
+        "total_telemetry_records": 28000,
+        "domains": "IoT",
+        "csv_sources_count": 7,
+        "mllib_f1": 0.798,
+        "sklearn_f1": 0.814,
+        "total_anomalies_flagged": total_anomalies,
+        "sampling_rate_hz": 1.0,
+        "gateway_status": "operational"
+    }
+
+
+def get_iot_telemetry(device_id: str = "iot_weather", minutes: int = 30):
+    now = time.time()
+    minutes = max(5, min(minutes, 180))
+    count = min(30, minutes)
+    step = (minutes * 60) / count
+    data = []
+
+    base_configs = {
+        "iot_weather": {"base_temp": 26.5, "base_metric": 60.0, "label": "Humidity %"},
+        "iot_fridge": {"base_temp": 3.8, "base_metric": 4.0, "label": "Target Temp C"},
+        "iot_thermostat": {"base_temp": 22.0, "base_metric": 21.5, "label": "Set Point C"},
+        "iot_modbus": {"base_temp": 40.0, "base_metric": 120.0, "label": "Register Read Rate"},
+        "iot_garage_door": {"base_temp": 1.0, "base_metric": 100.0, "label": "Signal Quality %"},
+        "iot_gps_tracker": {"base_temp": 45.0, "base_metric": 9.0, "label": "Satellite Fix"},
+        "iot_motion_light": {"base_temp": 18.0, "base_metric": 320.0, "label": "Ambient Lux"}
+    }
+    cfg = base_configs.get(device_id, base_configs["iot_weather"])
+
+    for i in range(count):
+        t = now - (count - 1 - i) * step
+        dt = datetime.fromtimestamp(t, tz=timezone.utc)
+        jitter_val = (hash(f"{device_id}_{i}") % 100) / 50.0 - 1.0
+        primary_val = round(cfg["base_temp"] + jitter_val * 1.5, 2)
+        secondary_val = round(cfg["base_metric"] + jitter_val * 5.0, 1)
+        is_anomaly = i in (7, 19)
+        data.append({
+            "ts": dt.isoformat(),
+            "time": dt.strftime("%H:%M:%S"),
+            "primary_value": primary_val,
+            "secondary_value": secondary_val,
+            "metric_label": cfg["label"],
+            "anomaly": is_anomaly
+        })
+    return data
+
+
+def get_iot_anomalies(limit: int = 20):
+    now = datetime.now(timezone.utc)
+    events = [
+        {"id": 1, "device": "Industrial Modbus PLC", "type": "Backdoor Payload", "severity": "critical", "score": 0.94, "detail": "Illegal FC3 function code scan from unauthorized IP", "time": (now - timedelta(minutes=4)).strftime("%H:%M:%S")},
+        {"id": 2, "device": "Smart HVAC Thermostat", "type": "Password Brute-Force", "severity": "high", "score": 0.88, "detail": "Multiple failed BACnet authentication requests", "time": (now - timedelta(minutes=9)).strftime("%H:%M:%S")},
+        {"id": 3, "device": "Environmental Weather Station", "type": "DDoS Telemetry Flood", "severity": "medium", "score": 0.82, "detail": "Abnormal UDP packet rate exceeding 1500 pps", "time": (now - timedelta(minutes=14)).strftime("%H:%M:%S")},
+        {"id": 4, "device": "Fleet GPS Telematics Tracker", "type": "Command Injection", "severity": "high", "score": 0.89, "detail": "Malformed NMEA sentence with shell escape payload", "time": (now - timedelta(minutes=22)).strftime("%H:%M:%S")},
+        {"id": 5, "device": "Smart Refrigerator Unit", "type": "Ransomware Tampering", "severity": "low", "score": 0.74, "detail": "Rapid modification of configuration registers", "time": (now - timedelta(minutes=31)).strftime("%H:%M:%S")},
+        {"id": 6, "device": "Access Control Garage Gate", "type": "Replay Attack", "severity": "medium", "score": 0.79, "detail": "Duplicate sphone token cryptographic timestamp", "time": (now - timedelta(minutes=45)).strftime("%H:%M:%S")}
+    ]
+    return events[:limit]
+
+
+def get_network_summary():
+    return {
+        "domain": "Network",
+        "dataset_files": 23,
+        "total_records_evaluated": 89786,
+        "raw_volume_gb": 3.08,
+        "gateway_node": "Network_Gateway_Core",
+        "degree_centrality": 0.4667,
+        "pagerank": 0.1690,
+        "betweenness_centrality": 0.0149,
+        "detection_f1_mllib": 0.991,
+        "detection_f1_sklearn": 0.991,
+        "current_throughput_mbps": 218.4,
+        "ingress_mbps": 146.2,
+        "egress_mbps": 72.2,
+        "packet_rate_pps": 18640,
+        "active_flows_count": 1420
+    }
+
+
+def get_network_traffic(minutes: int = 30):
+    now = time.time()
+    minutes = max(5, min(minutes, 180))
+    count = min(30, minutes)
+    step = (minutes * 60) / count
+    data = []
+    for i in range(count):
+        t = now - (count - 1 - i) * step
+        dt = datetime.fromtimestamp(t, tz=timezone.utc)
+        jitter1 = (hash(f"net_in_{i}") % 80) - 40
+        jitter2 = (hash(f"net_out_{i}") % 40) - 20
+        jitter_pkt = (hash(f"net_pkt_{i}") % 1000) - 500
+        ingress = max(20.0, round(145.0 + jitter1, 1))
+        egress = max(10.0, round(70.0 + jitter2, 1))
+        pkts = max(1000, 18500 + jitter_pkt)
+        is_spike = i in (6, 18, 25)
+        if is_spike:
+            ingress = round(ingress * 1.8, 1)
+            pkts = int(pkts * 2.2)
+        data.append({
+            "ts": dt.isoformat(),
+            "time": dt.strftime("%H:%M:%S"),
+            "ingress_mbps": ingress,
+            "egress_mbps": egress,
+            "packet_rate_pps": pkts,
+            "flow_rate_fps": int(pkts / 13),
+            "threat_detected": is_spike
+        })
+    return data
+
+
+def get_network_flows(limit: int = 25):
+    flows = [
+        {"id": "fl-01", "src_ip": "192.168.1.150", "dst_ip": "192.168.1.1", "src_port": 54210, "dst_port": 80, "proto": "TCP", "service": "HTTP", "duration": 0.42, "bytes": 14250, "packets": 32, "state": "SF", "status": "Normal"},
+        {"id": "fl-02", "src_ip": "192.168.1.194", "dst_ip": "192.168.1.1", "src_port": 49152, "dst_port": 502, "proto": "TCP", "service": "Modbus", "duration": 1.15, "bytes": 8420, "packets": 18, "state": "SF", "status": "Normal"},
+        {"id": "fl-03", "src_ip": "192.168.1.205", "dst_ip": "192.168.1.10", "src_port": 61200, "dst_port": 80, "proto": "TCP", "service": "HTTP", "duration": 4.80, "bytes": 89450, "packets": 320, "state": "S0", "status": "Flagged - DDoS"},
+        {"id": "fl-04", "src_ip": "192.168.1.205", "dst_ip": "192.168.1.10", "src_port": 61201, "dst_port": 80, "proto": "TCP", "service": "HTTP", "duration": 5.10, "bytes": 94100, "packets": 345, "state": "S0", "status": "Flagged - DDoS"},
+        {"id": "fl-05", "src_ip": "192.168.1.180", "dst_ip": "8.8.8.8", "src_port": 53120, "dst_port": 53, "proto": "UDP", "service": "DNS", "duration": 0.05, "bytes": 240, "packets": 4, "state": "SF", "status": "Normal"},
+        {"id": "fl-06", "src_ip": "192.168.1.199", "dst_ip": "192.168.1.15", "src_port": 42110, "dst_port": 22, "proto": "TCP", "service": "SSH", "duration": 0.12, "bytes": 1840, "packets": 12, "state": "REJ", "status": "Flagged - Password Brute Force"},
+        {"id": "fl-07", "src_ip": "192.168.1.199", "dst_ip": "192.168.1.15", "src_port": 42112, "dst_port": 22, "proto": "TCP", "service": "SSH", "duration": 0.11, "bytes": 1840, "packets": 12, "state": "REJ", "status": "Flagged - Password Brute Force"},
+        {"id": "fl-08", "src_ip": "192.168.1.165", "dst_ip": "104.244.42.1", "src_port": 58310, "dst_port": 443, "proto": "TCP", "service": "SSL", "duration": 12.4, "bytes": 451000, "packets": 820, "state": "SF", "status": "Normal"},
+        {"id": "fl-09", "src_ip": "192.168.1.210", "dst_ip": "192.168.1.0/24", "src_port": 51100, "dst_port": 445, "proto": "TCP", "service": "SMB", "duration": 0.02, "bytes": 120, "packets": 2, "state": "S0", "status": "Flagged - Port Scanning"},
+        {"id": "fl-10", "src_ip": "192.168.1.210", "dst_ip": "192.168.1.0/24", "src_port": 51101, "dst_port": 3389, "proto": "TCP", "service": "RDP", "duration": 0.02, "bytes": 120, "packets": 2, "state": "S0", "status": "Flagged - Port Scanning"},
+        {"id": "fl-11", "src_ip": "192.168.1.140", "dst_ip": "192.168.1.1", "src_port": 1883, "dst_port": 1883, "proto": "TCP", "service": "MQTT", "duration": 60.0, "bytes": 48200, "packets": 310, "state": "SF", "status": "Normal"},
+        {"id": "fl-12", "src_ip": "192.168.1.177", "dst_ip": "192.168.1.20", "src_port": 39110, "dst_port": 8080, "proto": "TCP", "service": "HTTP", "duration": 0.35, "bytes": 3410, "packets": 14, "state": "SF", "status": "Flagged - XSS"}
+    ]
+    return flows[:limit]
+
+
+def get_network_threats(limit: int = 20):
+    now = datetime.now(timezone.utc)
+    threats = [
+        {"id": 1, "type": "DDoS SYN Flood", "src_ip": "192.168.1.205", "dst_ip": "192.168.1.10", "port": 80, "severity": "critical", "f1_score": 0.993, "packets": 12450, "action": "Rate-limited via Core Gateway", "time": (now - timedelta(minutes=2)).strftime("%H:%M:%S")},
+        {"id": 2, "type": "TCP Port Sweep Scanning", "src_ip": "192.168.1.210", "dst_ip": "192.168.1.0/24", "port": "Multi (445/3389)", "severity": "high", "f1_score": 0.997, "packets": 4820, "action": "IP Quarantined", "time": (now - timedelta(minutes=6)).strftime("%H:%M:%S")},
+        {"id": 3, "type": "SSH Password Brute-Force", "src_ip": "192.168.1.199", "dst_ip": "192.168.1.15", "port": 22, "severity": "high", "f1_score": 0.991, "packets": 1940, "action": "Connection Dropped", "time": (now - timedelta(minutes=11)).strftime("%H:%M:%S")},
+        {"id": 4, "type": "Backdoor Command Channel", "src_ip": "192.168.1.218", "dst_ip": "45.33.32.156", "port": 4444, "severity": "critical", "f1_score": 0.983, "packets": 620, "action": "TCP RST Injected", "time": (now - timedelta(minutes=19)).strftime("%H:%M:%S")},
+        {"id": 5, "type": "Cross-Site Scripting (XSS)", "src_ip": "192.168.1.177", "dst_ip": "192.168.1.20", "port": 8080, "severity": "medium", "f1_score": 0.981, "packets": 140, "action": "WAF Block", "time": (now - timedelta(minutes=28)).strftime("%H:%M:%S")},
+        {"id": 6, "type": "SQL Command Injection", "src_ip": "192.168.1.182", "dst_ip": "192.168.1.25", "port": 3306, "severity": "high", "f1_score": 0.967, "packets": 310, "action": "Payload Sanitized", "time": (now - timedelta(minutes=39)).strftime("%H:%M:%S")}
+    ]
+    return threats[:limit]
+
+
+def get_network_protocols():
+    return [
+        {"protocol": "TCP", "percentage": 62.4, "flows": 886, "bytes_mb": 136.2},
+        {"protocol": "UDP", "percentage": 27.8, "flows": 395, "bytes_mb": 60.7},
+        {"protocol": "ICMP", "percentage": 4.6, "flows": 65, "bytes_mb": 10.1},
+        {"protocol": "Modbus/SCADA", "percentage": 3.2, "flows": 45, "bytes_mb": 7.0},
+        {"protocol": "Other (CoAP/MQTT)", "percentage": 2.0, "flows": 29, "bytes_mb": 4.4}
+    ]
+

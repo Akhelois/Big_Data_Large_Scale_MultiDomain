@@ -42,12 +42,12 @@ Code/
 
 Dataset multidomain (38 file CSV, ±3.6 GB) tersimpan di `model/dataset/`, terdiri dari 4 domain:
 
-| Domain | Isi |
-|---|---|
-| `Processed_IoT_dataset` | Telemetri perangkat IoT (Fridge, GPS Tracker, Modbus, Motion Light, Thermostat, Weather, Garage Door) |
-| `Processed_Linux_dataset` | Metrik host Linux (proses, disk, memori) |
-| `Processed_Network_dataset` | Trafik gateway jaringan |
-| `Processed_Windows_dataset` | Metrik workstation Windows |
+| Domain                        | Isi                                                                                                   |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `Processed_IoT_dataset`     | Telemetri perangkat IoT (Fridge, GPS Tracker, Modbus, Motion Light, Thermostat, Weather, Garage Door) |
+| `Processed_Linux_dataset`   | Metrik host Linux (proses, disk, memori)                                                              |
+| `Processed_Network_dataset` | Trafik gateway jaringan                                                                               |
+| `Processed_Windows_dataset` | Metrik workstation Windows                                                                            |
 
 ## Prasyarat
 
@@ -75,6 +75,7 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
 Saat backend menyala otomatis berjalan:
+
 - **Embedded monitoring agent** — memonitor PC backend via psutil (`EMBEDDED_AGENT=0` untuk mematikan, `AGENT_INTERVAL=10` untuk interval detik)
 - **Network discovery** — ping sweep subnet /24 untuk mendeteksi perangkat lain (`DISCOVERY=0` untuk mematikan, `DISCOVERY_INTERVAL=300`)
 
@@ -138,28 +139,28 @@ python agent.py --backend http://<ip-backend>:8000 --interval 10
 
 ## API Utama
 
-| Endpoint | Fungsi |
-|---|---|
-| `GET /api/overview` | Ringkasan dataset & model |
-| `GET /api/dataset` | Ringkasan file dataset per domain |
-| `GET /api/performance` | Evaluasi model per domain (sklearn vs Spark MLlib) |
-| `GET /api/anomaly` | Hasil deteksi anomali |
-| `GET /api/anomaly/predictions` | Prediksi tipe serangan per domain |
-| `GET /api/clustering` | Ringkasan cluster K-Means |
-| `GET /api/neo4j/analytics` | Statistik graph Neo4j (node, relasi, degree) |
-| `POST /api/monitoring/ingest` | Ingest metrik dari monitoring agent |
-| `GET /api/monitoring/hosts` | Daftar host (agent + hasil discovery) |
-| `GET /api/monitoring/history?host=<id>&minutes=60` | Time-series metrik per host |
-| `GET /api/monitoring/anomalies` | Log anomali CPU/RAM/disk |
-| `GET /api/monitoring/agent-script` | Unduh agent standalone untuk PC lain |
+| Endpoint                                             | Fungsi                                             |
+| ---------------------------------------------------- | -------------------------------------------------- |
+| `GET /api/overview`                                | Ringkasan dataset & model                          |
+| `GET /api/dataset`                                 | Ringkasan file dataset per domain                  |
+| `GET /api/performance`                             | Evaluasi model per domain (sklearn vs Spark MLlib) |
+| `GET /api/anomaly`                                 | Hasil deteksi anomali                              |
+| `GET /api/anomaly/predictions`                     | Prediksi tipe serangan per domain                  |
+| `GET /api/clustering`                              | Ringkasan cluster K-Means                          |
+| `GET /api/neo4j/analytics`                         | Statistik graph Neo4j (node, relasi, degree)       |
+| `POST /api/monitoring/ingest`                      | Ingest metrik dari monitoring agent                |
+| `GET /api/monitoring/hosts`                        | Daftar host (agent + hasil discovery)              |
+| `GET /api/monitoring/history?host=<id>&minutes=60` | Time-series metrik per host                        |
+| `GET /api/monitoring/anomalies`                    | Log anomali CPU/RAM/disk                           |
+| `GET /api/monitoring/agent-script`                 | Unduh agent standalone untuk PC lain               |
 
 ## Output Utama Notebook
 
-| File | Isi |
-|---|---|
-| `model/model_summary.csv` | Metrik evaluasi per domain (Accuracy, F1, Balanced Accuracy, dll.) |
-| `model/domain_model_evaluation.csv` | Perbandingan Spark MLlib vs scikit-learn |
-| `model/cluster_summary.csv` | Distribusi record per cluster K-Means |
-| `model/anomaly_type_prediction_summary.csv` | Prediksi tipe serangan per domain |
-| `model/models/` | Artefak model per domain (.pkl + metadata) |
-| `model/*.png` | Visualisasi (elbow, confusion matrix, graph analytics, dll.) |
+| File                                          | Isi                                                                |
+| --------------------------------------------- | ------------------------------------------------------------------ |
+| `model/model_summary.csv`                   | Metrik evaluasi per domain (Accuracy, F1, Balanced Accuracy, dll.) |
+| `model/domain_model_evaluation.csv`         | Perbandingan Spark MLlib vs scikit-learn                           |
+| `model/cluster_summary.csv`                 | Distribusi record per cluster K-Means                              |
+| `model/anomaly_type_prediction_summary.csv` | Prediksi tipe serangan per domain                                  |
+| `model/models/`                             | Artefak model per domain (.pkl + metadata)                         |
+| `model/*.png`                               | Visualisasi (elbow, confusion matrix, graph analytics, dll.)       |

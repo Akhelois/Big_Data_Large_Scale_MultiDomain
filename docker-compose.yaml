@@ -1,10 +1,10 @@
 services:
-  # Frontend (Streamlit)
+  # Frontend (React)
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: streamlit_frontend
+    container_name: react_frontend
     ports:
       - "1234:1234"
     volumes:

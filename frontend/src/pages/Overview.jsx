@@ -26,22 +26,22 @@ import "../styles/pages/Pages.css";
 
 const number = new Intl.NumberFormat("id-ID");
 const percentage = (v) => v === null || v === undefined || v === "" ? "-" : `${(Number(v) * 100).toFixed(1)}%`;
-const hasUpdatedEvaluation = (rows) => rows.some((row) => row.IF_F1 !== undefined && row.Dummy_F1 !== undefined);
+const hasUpdatedEvaluation = (rows) => rows.some((row) => row.Sklearn_IF_F1 !== undefined && row.Dummy_F1 !== undefined);
 
 const COLORS = {
-    primary: "#2563eb",
-    secondary: "#94a3b8",
-    muted: "#cbd5e1"
+    primary: "#0f766e",
+    secondary: "#a8a29e",
+    muted: "#d6d3d1"
 };
 
 function getMonitorStatus(row, currentEvaluation) {
-    if (!row) return { label: "No result", tone: "muted" };
-    if (Number(row.Test || 0) < 100) return { label: "Small test set", tone: "warning" };
-    if (!currentEvaluation) return { label: "Old evaluation", tone: "muted" };
+    if (!row) return { label: "Tidak ada hasil", tone: "muted" };
+    if (Number(row.Test || 0) < 100) return { label: "Test set kecil", tone: "warning" };
+    if (!currentEvaluation) return { label: "Evaluasi lama", tone: "muted" };
     if (Number(row.Balanced_Accuracy || 0) < 0.65 || Number(row.F1 || 0) + 0.005 < Number(row.Dummy_F1 || 0)) {
-        return { label: "Needs review", tone: "warning" };
+        return { label: "Perlu ditinjau", tone: "warning" };
     }
-    return { label: "Checks pass", tone: "good" };
+    return { label: "Lolos pemeriksaan", tone: "good" };
 }
 
 function Overview({ selectedDomain }) {
@@ -62,7 +62,7 @@ function Overview({ selectedDomain }) {
         Promise.all([getOverview(), getDataset(), getPerformance(), getClusters()])
             .then(([ov, ds, pf, cl]) => {
                 const failed = [ov, ds, pf, cl].find((r) => r.status !== "success");
-                if (failed) throw new Error(failed.message || "A data source could not be loaded");
+                if (failed) throw new Error(failed.message || "Satu sumber data gagal dimuat");
                 if (!active) return;
                 setOverview(ov.data);
                 setDataset(ds.data || []);
@@ -103,8 +103,8 @@ function Overview({ selectedDomain }) {
 
     const rateData = visiblePerformance.map((row) => ({
         domain: row.Domain,
-        "Labeled positive": Number(row.Positive_Rate || 0),
-        "Predicted positive": Number(row.Predicted_Anomaly_Rate || 0)
+        "Label positif": Number(row.Positive_Rate || 0),
+        "Prediksi positif": Number(row.Predicted_Anomaly_Rate || 0)
     }));
 
     const clusterData = clusters
@@ -114,8 +114,8 @@ function Overview({ selectedDomain }) {
     if (loading) {
         return (
             <div className="page-content">
-                <SectionHeader title="Monitoring Overview" description="Batch model health and dataset coverage." />
-                <div className="loading-state">Loading monitoring data...</div>
+                <SectionHeader title="Ringkasan Monitoring" description="Kesehatan model batch dan cakupan dataset." />
+                <div className="loading-state">Memuat data monitoring...</div>
             </div>
         );
     }
@@ -123,10 +123,10 @@ function Overview({ selectedDomain }) {
     if (error) {
         return (
             <div className="page-content">
-                <SectionHeader title="Monitoring Overview" description="Batch model health and dataset coverage." />
-                <div className="error-state">Failed to load monitoring data: {error}</div>
+                <SectionHeader title="Ringkasan Monitoring" description="Kesehatan model batch dan cakupan dataset." />
+                <div className="error-state">Gagal memuat data monitoring: {error}</div>
                 <button className="monitor-refresh" onClick={() => setReload((v) => v + 1)}>
-                    <LuRefreshCw size={13} /> Retry
+                    <LuRefreshCw size={13} /> Coba lagi
                 </button>
             </div>
         );
@@ -138,99 +138,99 @@ function Overview({ selectedDomain }) {
         <div className="page-content monitoring-page">
             <div className="monitor-heading-row">
                 <SectionHeader
-                    title="Monitoring Overview"
-                    description="Offline evaluation health and dataset coverage for the selected domain."
+                    title="Ringkasan Monitoring"
+                    description="Kesehatan evaluasi offline dan cakupan dataset untuk domain terpilih."
                 />
                 <div className="monitor-toolbar">
-                    {lastChecked && <span>Checked {lastChecked.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}</span>}
+                    {lastChecked && <span>Diperiksa {lastChecked.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}</span>}
                     <button className="monitor-refresh" onClick={() => setReload((v) => v + 1)}>
-                        <LuRefreshCw size={13} /> Refresh
+                        <LuRefreshCw size={13} /> Muat ulang
                     </button>
                 </div>
             </div>
 
             {!currentEvaluation && (
                 <div className="monitor-banner warning">
-                    Evaluation files are from the previous Isolation Forest run. Rerun the notebook to publish classifier, baseline, and per-domain monitoring metrics.
+                    File evaluasi masih dari run Isolation Forest sebelumnya. Jalankan ulang notebook untuk mem-publish metrik classifier, baseline, dan monitoring per domain.
                 </div>
             )}
 
             {currentEvaluation && domainsNeedingReview > 0 && (
                 <div className="monitor-banner warning">
                     {selectedDomain === "All Domains"
-                        ? `${domainsNeedingReview} domains need review. The combined classifier receives Domain_Type as an input; its aggregate score may partly reflect domain identity.`
-                        : `${selectedDomain} is flagged for review. Treat this score as a batch evaluation, not proof of live anomaly detection.`}
+                        ? `${domainsNeedingReview} domain perlu ditinjau. Classifier gabungan menerima Domain_Type sebagai input; skor agregatnya bisa sebagian mencerminkan identitas domain.`
+                        : `${selectedDomain} ditandai untuk ditinjau. Anggap ini evaluasi batch, bukan bukti deteksi anomali live.`}
                 </div>
             )}
 
             <div className="stats-grid monitoring-stats">
-                <StatCard icon={LuDatabase} label="Source records" value={number.format(totals.records)} description="In selected dataset files" />
-                <StatCard icon={LuDatabase} label="Source files" value={number.format(totals.files)} description="Included in this selection" />
-                <StatCard icon={LuActivity} label="Model F1" value={percentage(activeModel?.F1)} description={activeModel?.Domain || "No evaluation"} />
-                <StatCard icon={LuShieldCheck} label="Balanced accuracy" value={activeModel ? percentage(activeModel.Balanced_Accuracy) : "-"} description="Weights both label classes" />
+                <StatCard icon={LuDatabase} label="Total data" value={number.format(totals.records)} description="Pada file dataset terpilih" />
+                <StatCard icon={LuDatabase} label="Jumlah file" value={number.format(totals.files)} description="Termasuk dalam pilihan ini" />
+                <StatCard icon={LuActivity} label="Model F1" value={percentage(activeModel?.F1)} description={activeModel?.Domain || "Belum ada evaluasi"} />
+                <StatCard icon={LuShieldCheck} label="Balanced accuracy" value={activeModel ? percentage(activeModel.Balanced_Accuracy) : "-"} description="Menimbang kedua kelas label" />
                 <StatCard
                     icon={activeStatus.tone === "good" ? LuCircleCheck : LuTriangleAlert}
-                    label="Evaluation status"
+                    label="Status evaluasi"
                     value={activeStatus.label}
-                    description={activeModel ? `${number.format(Number(activeModel.Test || 0))} test rows` : "No matching model"}
+                    description={activeModel ? `${number.format(Number(activeModel.Test || 0))} baris uji` : "Tidak ada model yang cocok"}
                 />
             </div>
 
             <div className="chart-grid two monitoring-charts">
-                <ChartCard title="Model quality by domain" description="F1 compared with the majority-class baseline.">
+                <ChartCard title="Kualitas model per domain" description="F1 dibandingkan baseline kelas mayoritas.">
                     {qualityData.length ? (
                         <ResponsiveContainer width="100%" height={280}>
                             <BarChart data={qualityData} margin={{ top: 12, right: 12, left: 0, bottom: 4 }}>
-                                <CartesianGrid stroke="#eef0f4" vertical={false} />
-                                <XAxis dataKey="domain" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "#9ca3af" }} />
-                                <YAxis domain={[0, 1]} axisLine={false} tickLine={false} tickFormatter={(v) => `${Math.round(v * 100)}%`} tick={{ fontSize: 11, fill: "#9ca3af" }} />
-                                <Tooltip formatter={(v) => percentage(v)} contentStyle={{ borderRadius: 8, border: "1px solid #e5e8ed", fontSize: 12 }} />
+                                <CartesianGrid stroke="#eae8e4" vertical={false} />
+                                <XAxis dataKey="domain" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "#a8a29e" }} />
+                                <YAxis domain={[0, 1]} axisLine={false} tickLine={false} tickFormatter={(v) => `${Math.round(v * 100)}%`} tick={{ fontSize: 11, fill: "#a8a29e" }} />
+                                <Tooltip formatter={(v) => percentage(v)} contentStyle={{ borderRadius: 8, border: "1px solid #e7e5e3", fontSize: 12 }} />
                                 <Legend wrapperStyle={{ fontSize: 12 }} />
                                 <Bar dataKey="F1" fill={COLORS.primary} radius={[4, 4, 0, 0]} />
                                 {currentEvaluation && <Bar dataKey="Baseline" fill={COLORS.muted} radius={[4, 4, 0, 0]} />}
                             </BarChart>
                         </ResponsiveContainer>
-                    ) : <div className="empty-state">No domain evaluation available.</div>}
+                    ) : <div className="empty-state">Belum ada evaluasi domain.</div>}
                 </ChartCard>
 
-                <ChartCard title="Label and prediction rates" description="Shows whether the model flags a similar share of records as the labels.">
-                    {rateData.some((row) => row["Labeled positive"] > 0 || row["Predicted positive"] > 0) ? (
+                <ChartCard title="Rasio label dan prediksi" description="Menunjukkan apakah model menandai porsi data yang mirip dengan label.">
+                    {rateData.some((row) => row["Label positif"] > 0 || row["Prediksi positif"] > 0) ? (
                         <ResponsiveContainer width="100%" height={280}>
                             <BarChart data={rateData} margin={{ top: 12, right: 12, left: 0, bottom: 4 }}>
-                                <CartesianGrid stroke="#eef0f4" vertical={false} />
-                                <XAxis dataKey="domain" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "#9ca3af" }} />
-                                <YAxis domain={[0, 1]} axisLine={false} tickLine={false} tickFormatter={(v) => `${Math.round(v * 100)}%`} tick={{ fontSize: 11, fill: "#9ca3af" }} />
-                                <Tooltip formatter={(v) => percentage(v)} contentStyle={{ borderRadius: 8, border: "1px solid #e5e8ed", fontSize: 12 }} />
+                                <CartesianGrid stroke="#eae8e4" vertical={false} />
+                                <XAxis dataKey="domain" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "#a8a29e" }} />
+                                <YAxis domain={[0, 1]} axisLine={false} tickLine={false} tickFormatter={(v) => `${Math.round(v * 100)}%`} tick={{ fontSize: 11, fill: "#a8a29e" }} />
+                                <Tooltip formatter={(v) => percentage(v)} contentStyle={{ borderRadius: 8, border: "1px solid #e7e5e3", fontSize: 12 }} />
                                 <Legend wrapperStyle={{ fontSize: 12 }} />
-                                <Bar dataKey="Labeled positive" fill={COLORS.secondary} radius={[4, 4, 0, 0]} />
-                                <Bar dataKey="Predicted positive" fill={COLORS.primary} radius={[4, 4, 0, 0]} />
+                                <Bar dataKey="Label positif" fill={COLORS.secondary} radius={[4, 4, 0, 0]} />
+                                <Bar dataKey="Prediksi positif" fill={COLORS.primary} radius={[4, 4, 0, 0]} />
                             </BarChart>
                         </ResponsiveContainer>
-                    ) : <div className="empty-state">Positive-rate detail not available in this evaluation.</div>}
+                    ) : <div className="empty-state">Detail rasio positif tidak tersedia di evaluasi ini.</div>}
                 </ChartCard>
             </div>
 
             <div className="chart-grid monitoring-charts">
-                <ChartCard title="Cluster counts in model sample" description="Sampled assignments by domain and cluster.">
+                <ChartCard title="Jumlah cluster pada sampel model" description="Penugasan sampel per domain dan cluster.">
                     {clusterData.length ? (
                         <ResponsiveContainer width="100%" height={240}>
                             <BarChart data={clusterData} margin={{ top: 12, right: 12, left: 0, bottom: 4 }}>
-                                <CartesianGrid stroke="#eef0f4" vertical={false} />
-                                <XAxis dataKey="cluster" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
-                                <YAxis axisLine={false} tickLine={false} tickFormatter={(v) => number.format(v)} tick={{ fontSize: 11, fill: "#9ca3af" }} />
-                                <Tooltip formatter={(v) => number.format(Number(v))} contentStyle={{ borderRadius: 8, border: "1px solid #e5e8ed", fontSize: 12 }} />
+                                <CartesianGrid stroke="#eae8e4" vertical={false} />
+                                <XAxis dataKey="cluster" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#a8a29e" }} />
+                                <YAxis axisLine={false} tickLine={false} tickFormatter={(v) => number.format(v)} tick={{ fontSize: 11, fill: "#a8a29e" }} />
+                                <Tooltip formatter={(v) => number.format(Number(v))} contentStyle={{ borderRadius: 8, border: "1px solid #e7e5e3", fontSize: 12 }} />
                                 <Bar dataKey="Records" fill={COLORS.secondary} radius={[4, 4, 0, 0]} />
                             </BarChart>
                         </ResponsiveContainer>
-                    ) : <div className="empty-state">No cluster summary available.</div>}
+                    ) : <div className="empty-state">Belum ada ringkasan cluster.</div>}
                 </ChartCard>
             </div>
 
             <div className="table-card monitor-table-card">
                 <div className="table-header">
                     <div>
-                        <h3>Domain health</h3>
-                        <p>Review score quality, baseline gap, and test-set size together.</p>
+                        <h3>Kesehatan domain</h3>
+                        <p>Tinjau kualitas skor, selisih baseline, dan ukuran test set sekaligus.</p>
                     </div>
                 </div>
                 <div className="table-container">
@@ -238,8 +238,8 @@ function Overview({ selectedDomain }) {
                         <thead>
                             <tr>
                                 <th>Domain</th>
-                                <th>Records</th>
-                                <th>Test rows</th>
+                                <th>Data</th>
+                                <th>Baris uji</th>
                                 <th>Split</th>
                                 <th>F1</th>
                                 <th>Baseline F1</th>
@@ -270,8 +270,8 @@ function Overview({ selectedDomain }) {
             </div>
 
             <p className="monitor-footnote">
-                This page reads generated CSV summaries. Refresh reloads those files; it does not stream live events or rerun model training.
-                Review flags are screening heuristics: test sets below 100 rows, balanced accuracy below 65%, or F1 more than 0.5 pp below the majority baseline.
+                Halaman ini membaca file ringkasan CSV yang digenerate. Muat ulang hanya membaca ulang file tersebut, bukan streaming event live atau melatih ulang model.
+                Flag peninjauan adalah heuristik screening: test set di bawah 100 baris, balanced accuracy di bawah 65%, atau F1 lebih dari 0,5 pp di bawah baseline kelas mayoritas.
             </p>
         </div>
     );

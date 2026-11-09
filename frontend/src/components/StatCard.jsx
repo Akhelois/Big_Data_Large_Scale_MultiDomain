@@ -1,21 +1,25 @@
+import { isValidElement } from "react";
 import "../styles/components/StatCard.css";
 
-function StatCard({ label, value, description, icon: Icon }) {
+function StatCard({ label, title, value, description, subtitle, icon: Icon }) {
+    const displayLabel = label || title;
+    const displayDescription = description || subtitle;
+
     return (
         <div className="stat-card">
             <div className="stat-label">
                 {Icon && (
                     <span className="stat-icon">
-                        <Icon size={13} />
+                        {isValidElement(Icon) ? Icon : <Icon size={13} />}
                     </span>
                 )}
-                {label}
+                {displayLabel}
             </div>
 
             <div className="stat-value">{value}</div>
 
-            {description && (
-                <div className="stat-description">{description}</div>
+            {displayDescription && (
+                <div className="stat-description">{displayDescription}</div>
             )}
         </div>
     );

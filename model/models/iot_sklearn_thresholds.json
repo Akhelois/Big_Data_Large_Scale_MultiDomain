@@ -1,0 +1,12 @@
+{
+  "scope": "per_source",
+  "thresholds": {
+    "IoT_Fridge.csv": 0.3584360951382047,
+    "IoT_GPS_Tracker.csv": 0.5,
+    "IoT_Garage_Door.csv": 0.6050822679926766,
+    "IoT_Modbus.csv": 0.46187671114510176,
+    "IoT_Motion_Light.csv": 0.3535878499354268,
+    "IoT_Thermostat.csv": 0.4115558837311235,
+    "IoT_Weather.csv": 0.31331153597714934
+  }
+}

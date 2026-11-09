@@ -13,3 +13,8 @@ __pycache__/
 /backend/monitoring_data.db
 /backend/monitoring_data.db-shm
 /backend/monitoring_data.db-wal
+/model/spark_checkpoints/
+/model/models/*_mllib/
+**/*.crc
+**/_SUCCESS
+/model/*.bak

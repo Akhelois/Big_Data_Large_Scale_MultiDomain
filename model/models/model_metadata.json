@@ -5,6 +5,89 @@
     "Metric_Variation",
     "Throughput_Metric"
   ],
+  "domain_features": {
+    "Multidomain": [
+      "Metric_Activity",
+      "Metric_Peak",
+      "Metric_Variation",
+      "Throughput_Metric"
+    ],
+    "IoT": [
+      "Metric_Activity",
+      "Metric_Peak",
+      "Metric_Variation",
+      "Throughput_Metric",
+      "cat_door_state_closed",
+      "cat_door_state_open",
+      "cat_light_status_off",
+      "cat_light_status_on",
+      "cat_sphone_signal_0",
+      "cat_sphone_signal_1",
+      "cat_sphone_signal_false",
+      "cat_sphone_signal_true",
+      "cat_temp_condition_high",
+      "cat_temp_condition_low",
+      "num_current_temperature",
+      "num_fc1_read_input_register",
+      "num_fc2_read_discrete_value",
+      "num_fc3_read_holding_register",
+      "num_fc4_read_coil",
+      "num_fridge_temperature",
+      "num_humidity",
+      "num_latitude",
+      "num_longitude",
+      "num_motion_status",
+      "num_pressure",
+      "num_temperature",
+      "num_thermostat_status"
+    ],
+    "Linux": [
+      "Metric_Activity",
+      "Metric_Peak",
+      "Metric_Variation",
+      "Throughput_Metric",
+      "cat_poli_0",
+      "cat_poli_empty",
+      "cat_poli_norm",
+      "cat_state_d",
+      "cat_state_e",
+      "cat_state_i",
+      "cat_state_r",
+      "cat_state_s",
+      "cat_state_z",
+      "num_cpu",
+      "num_cpunr",
+      "num_exc",
+      "num_majflt",
+      "num_mem",
+      "num_minflt",
+      "num_nice",
+      "num_pri",
+      "num_rddsk",
+      "num_rgrow",
+      "num_rsize",
+      "num_trun",
+      "num_tslpi",
+      "num_tslpu",
+      "num_vgrow",
+      "num_vsize",
+      "num_vstext",
+      "num_wrdsk"
+    ],
+    "Network": [
+      "Metric_Activity",
+      "Metric_Peak",
+      "Metric_Variation",
+      "Throughput_Metric"
+    ],
+    "Windows": [
+      "Metric_Activity",
+      "Metric_Peak",
+      "Metric_Variation",
+      "Throughput_Metric"
+    ]
+  },
+  "domain_evaluation_scope": "new-source generalization; separate source_model_evaluation.csv reports chronological within-source monitoring",
   "random_state": 42,
   "test_size": 0.2,
   "n_estimators": 200,
@@ -12,14 +95,16 @@
   "comparison_classifier_sklearn": "sklearn.ensemble.RandomForestClassifier",
   "comparison_anomaly_sklearn": "sklearn.ensemble.IsolationForest",
   "clustering": "pyspark.ml.clustering.KMeans",
-  "anomaly_method": "K-Means squared distance threshold fitted on training data",
+  "anomaly_method": "K-Means squared distance; threshold calibrated on train labels to maximize F1 (per domain)",
   "anomaly_quantile": 0.95,
+  "threshold_calibration": "per-domain: kmeans threshold = argmax F1 on train distances; IF threshold = argmax F1 on train decision scores; RF threshold = argmax F1 on OOF probabilities (scikit-learn) or stratified holdout-train probabilities (MLlib), 0.5 included as candidate",
   "frameworks_compared": [
     "Spark MLlib",
     "scikit-learn"
   ],
   "comparison_sample_limit": 100000,
   "comparison_split": "same held-out source-file rows or random-row fallback from the shared Spark sample",
+  "split_selection": "source-file holdout: first arrangement (seeded) with both classes on each side and |train prevalence - test prevalence| <= 0.05; otherwise the arrangement with the smallest prevalence gap; random-row fallback when no valid arrangement exists",
   "mapreduce_note": "Spark RDD map/reduce-style aggregation; not Hadoop MapReduce",
   "domains": [
     "IoT",
@@ -64,79 +149,9 @@
       "categorical_features": []
     },
     {
-      "domain": "Network",
-      "file": "Network_dataset_1.csv",
-      "rows_used": 1000000,
-      "numeric_features": [],
-      "categorical_features": []
-    },
-    {
-      "domain": "Network",
-      "file": "Network_dataset_13.csv",
-      "rows_used": 1000000,
-      "numeric_features": [],
-      "categorical_features": []
-    },
-    {
-      "domain": "Network",
-      "file": "Network_dataset_17.csv",
-      "rows_used": 1000000,
-      "numeric_features": [],
-      "categorical_features": []
-    },
-    {
-      "domain": "Network",
-      "file": "Network_dataset_2.csv",
-      "rows_used": 1000000,
-      "numeric_features": [],
-      "categorical_features": []
-    },
-    {
       "domain": "Linux",
       "file": "Linux_process_2.csv",
       "rows_used": 927968,
-      "numeric_features": [],
-      "categorical_features": []
-    },
-    {
-      "domain": "Network",
-      "file": "Network_dataset_10.csv",
-      "rows_used": 1786,
-      "numeric_features": [],
-      "categorical_features": []
-    },
-    {
-      "domain": "Network",
-      "file": "Network_dataset_11.csv",
-      "rows_used": 1000000,
-      "numeric_features": [],
-      "categorical_features": []
-    },
-    {
-      "domain": "Network",
-      "file": "Network_dataset_22.csv",
-      "rows_used": 999999,
-      "numeric_features": [],
-      "categorical_features": []
-    },
-    {
-      "domain": "Network",
-      "file": "Network_dataset_4.csv",
-      "rows_used": 1000000,
-      "numeric_features": [],
-      "categorical_features": []
-    },
-    {
-      "domain": "Network",
-      "file": "Network_dataset_5.csv",
-      "rows_used": 1000000,
-      "numeric_features": [],
-      "categorical_features": []
-    },
-    {
-      "domain": "Network",
-      "file": "Network_dataset_6.csv",
-      "rows_used": 1000000,
       "numeric_features": [],
       "categorical_features": []
     },
@@ -151,48 +166,6 @@
       "domain": "IoT",
       "file": "IoT_Thermostat.csv",
       "rows_used": 442228,
-      "numeric_features": [],
-      "categorical_features": []
-    },
-    {
-      "domain": "Network",
-      "file": "Network_dataset_15.csv",
-      "rows_used": 1000000,
-      "numeric_features": [],
-      "categorical_features": []
-    },
-    {
-      "domain": "Network",
-      "file": "Network_dataset_16.csv",
-      "rows_used": 1000000,
-      "numeric_features": [],
-      "categorical_features": []
-    },
-    {
-      "domain": "Network",
-      "file": "Network_dataset_18.csv",
-      "rows_used": 1000000,
-      "numeric_features": [],
-      "categorical_features": []
-    },
-    {
-      "domain": "Network",
-      "file": "Network_dataset_21.csv",
-      "rows_used": 999998,
-      "numeric_features": [],
-      "categorical_features": []
-    },
-    {
-      "domain": "Network",
-      "file": "Network_dataset_23.csv",
-      "rows_used": 339021,
-      "numeric_features": [],
-      "categorical_features": []
-    },
-    {
-      "domain": "Network",
-      "file": "Network_dataset_3.csv",
-      "rows_used": 1000000,
       "numeric_features": [],
       "categorical_features": []
     },
@@ -213,6 +186,34 @@
     {
       "domain": "Linux",
       "file": "Linux_process_1.csv",
+      "rows_used": 1000000,
+      "numeric_features": [],
+      "categorical_features": []
+    },
+    {
+      "domain": "Network",
+      "file": "Network_dataset_1.csv",
+      "rows_used": 1000000,
+      "numeric_features": [],
+      "categorical_features": []
+    },
+    {
+      "domain": "Network",
+      "file": "Network_dataset_13.csv",
+      "rows_used": 1000000,
+      "numeric_features": [],
+      "categorical_features": []
+    },
+    {
+      "domain": "Network",
+      "file": "Network_dataset_10.csv",
+      "rows_used": 1786,
+      "numeric_features": [],
+      "categorical_features": []
+    },
+    {
+      "domain": "Network",
+      "file": "Network_dataset_11.csv",
       "rows_used": 1000000,
       "numeric_features": [],
       "categorical_features": []
@@ -240,6 +241,55 @@
     },
     {
       "domain": "Network",
+      "file": "Network_dataset_17.csv",
+      "rows_used": 1000000,
+      "numeric_features": [],
+      "categorical_features": []
+    },
+    {
+      "domain": "Network",
+      "file": "Network_dataset_15.csv",
+      "rows_used": 1000000,
+      "numeric_features": [],
+      "categorical_features": []
+    },
+    {
+      "domain": "Network",
+      "file": "Network_dataset_16.csv",
+      "rows_used": 1000000,
+      "numeric_features": [],
+      "categorical_features": []
+    },
+    {
+      "domain": "Network",
+      "file": "Network_dataset_18.csv",
+      "rows_used": 1000000,
+      "numeric_features": [],
+      "categorical_features": []
+    },
+    {
+      "domain": "Network",
+      "file": "Network_dataset_2.csv",
+      "rows_used": 1000000,
+      "numeric_features": [],
+      "categorical_features": []
+    },
+    {
+      "domain": "Network",
+      "file": "Network_dataset_22.csv",
+      "rows_used": 999999,
+      "numeric_features": [],
+      "categorical_features": []
+    },
+    {
+      "domain": "Network",
+      "file": "Network_dataset_21.csv",
+      "rows_used": 999998,
+      "numeric_features": [],
+      "categorical_features": []
+    },
+    {
+      "domain": "Network",
       "file": "Network_dataset_19.csv",
       "rows_used": 1000000,
       "numeric_features": [],
@@ -249,6 +299,48 @@
       "domain": "Network",
       "file": "Network_dataset_20.csv",
       "rows_used": 999999,
+      "numeric_features": [],
+      "categorical_features": []
+    },
+    {
+      "domain": "Network",
+      "file": "Network_dataset_4.csv",
+      "rows_used": 1000000,
+      "numeric_features": [],
+      "categorical_features": []
+    },
+    {
+      "domain": "Network",
+      "file": "Network_dataset_5.csv",
+      "rows_used": 1000000,
+      "numeric_features": [],
+      "categorical_features": []
+    },
+    {
+      "domain": "Network",
+      "file": "Network_dataset_6.csv",
+      "rows_used": 1000000,
+      "numeric_features": [],
+      "categorical_features": []
+    },
+    {
+      "domain": "Network",
+      "file": "Network_dataset_23.csv",
+      "rows_used": 339021,
+      "numeric_features": [],
+      "categorical_features": []
+    },
+    {
+      "domain": "Network",
+      "file": "Network_dataset_3.csv",
+      "rows_used": 1000000,
+      "numeric_features": [],
+      "categorical_features": []
+    },
+    {
+      "domain": "Network",
+      "file": "Network_dataset_7.csv",
+      "rows_used": 1000000,
       "numeric_features": [],
       "categorical_features": []
     },
@@ -270,13 +362,6 @@
       "domain": "Windows",
       "file": "windows10_dataset.csv",
       "rows_used": 35975,
-      "numeric_features": [],
-      "categorical_features": []
-    },
-    {
-      "domain": "Network",
-      "file": "Network_dataset_7.csv",
-      "rows_used": 1000000,
       "numeric_features": [],
       "categorical_features": []
     },

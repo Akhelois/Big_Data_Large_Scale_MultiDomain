@@ -3,6 +3,7 @@ import {
     Bar,
     BarChart,
     CartesianGrid,
+    Cell,
     Legend,
     ResponsiveContainer,
     Tooltip,
@@ -24,6 +25,77 @@ import StatCard from "../components/StatCard";
 import "../styles/pages/Pages.css";
 
 const percent = (v) => v === null || v === undefined || v === "" ? "-" : `${(Number(v) * 100).toFixed(1)}%`;
+const numOrNull = (v) => (v === null || v === undefined || v === "" ? null : Number(v));
+const pctTick = (v) => `${(Number(v) * 100).toFixed(0)}%`;
+
+function DomainComparisonChart({ rows, selectedDomain }) {
+    const data = rows.map((r) => ({
+        domain: r.Domain,
+        f1: numOrNull(r.F1),
+        ba: numOrNull(r.Balanced_Accuracy)
+    }));
+    if (!data.length) return null;
+    return (
+        <ChartCard
+            title="Evaluasi per domain"
+            description="F1 dan balanced accuracy model di test set setiap domain. Domain yang dipilih disorot."
+        >
+            <ResponsiveContainer width="100%" height={280}>
+                <BarChart data={data} margin={{ top: 12, right: 12, left: 0, bottom: 8 }}>
+                    <CartesianGrid stroke="#eae8e4" vertical={false} />
+                    <XAxis dataKey="domain" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "#a8a29e" }} />
+                    <YAxis axisLine={false} tickLine={false} domain={[0, 1]} tickFormatter={pctTick} tick={{ fontSize: 11, fill: "#a8a29e" }} />
+                    <Tooltip
+                        contentStyle={{ borderRadius: 8, border: "1px solid #e7e5e3", fontSize: 12 }}
+                        formatter={(value) => (value === null || value === undefined ? "-" : percent(value))}
+                    />
+                    <Legend wrapperStyle={{ fontSize: 12 }} />
+                    <Bar dataKey="f1" name="F1" fill="#0f766e" radius={[4, 4, 0, 0]}>
+                        {data.map((d) => (
+                            <Cell key={d.domain} fill={d.domain === (selectedDomain === "All Domains" ? "Multidomain" : selectedDomain) ? "#0f766e" : "#99f6e4"} />
+                        ))}
+                    </Bar>
+                    <Bar dataKey="ba" name="Balanced accuracy" fill="#8b5cf6" radius={[4, 4, 0, 0]}>
+                        {data.map((d) => (
+                            <Cell key={d.domain} fill={d.domain === (selectedDomain === "All Domains" ? "Multidomain" : selectedDomain) ? "#8b5cf6" : "#ddd6fe"} />
+                        ))}
+                    </Bar>
+                </BarChart>
+            </ResponsiveContainer>
+        </ChartCard>
+    );
+}
+
+function FrameworkComparisonChart({ evaluation }) {
+    if (!evaluation) return null;
+    const data = [
+        { framework: "Spark MLlib", f1: numOrNull(evaluation.MLlib_F1), ba: numOrNull(evaluation.MLlib_Balanced_Accuracy) },
+        { framework: "scikit-learn", f1: numOrNull(evaluation.Sklearn_F1), ba: numOrNull(evaluation.Sklearn_Balanced_Accuracy) },
+        { framework: "KMeans anomaly", f1: numOrNull(evaluation.KMeans_Anomaly_F1), ba: numOrNull(evaluation.KMeans_Anomaly_Balanced_Accuracy) },
+        { framework: "Isolation Forest", f1: numOrNull(evaluation.Sklearn_IF_F1), ba: numOrNull(evaluation.Sklearn_IF_Balanced_Accuracy) }
+    ];
+    return (
+        <ChartCard
+            title={`Perbandingan framework — ${evaluation.Domain}`}
+            description="F1 dan balanced accuracy tiap framework deteksi anomali pada test set domain ini."
+        >
+            <ResponsiveContainer width="100%" height={280}>
+                <BarChart data={data} margin={{ top: 12, right: 12, left: 0, bottom: 8 }}>
+                    <CartesianGrid stroke="#eae8e4" vertical={false} />
+                    <XAxis dataKey="framework" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "#a8a29e" }} />
+                    <YAxis axisLine={false} tickLine={false} domain={[0, 1]} tickFormatter={pctTick} tick={{ fontSize: 11, fill: "#a8a29e" }} />
+                    <Tooltip
+                        contentStyle={{ borderRadius: 8, border: "1px solid #e7e5e3", fontSize: 12 }}
+                        formatter={(value) => (value === null || value === undefined ? "-" : percent(value))}
+                    />
+                    <Legend wrapperStyle={{ fontSize: 12 }} />
+                    <Bar dataKey="f1" name="F1" fill="#0f766e" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="ba" name="Balanced accuracy" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                </BarChart>
+            </ResponsiveContainer>
+        </ChartCard>
+    );
+}
 
 function AnomalyDetection({ selectedDomain }) {
     const [rows, setRows] = useState([]);
@@ -99,12 +171,15 @@ function AnomalyDetection({ selectedDomain }) {
                 <StatCard icon={LuActivity} label="Balanced accuracy" value={evaluation ? percent(evaluation.Balanced_Accuracy) : "-"} description="Metrik untuk dua kelas tidak seimbang" />
                 <StatCard
                     icon={LuTriangleAlert}
-                    label="Predicted anomalies"
+                    label="Anomali terprediksi"
                     value={evaluation ? (Number(evaluation.Predicted_Anomaly_Rate || 0) * Number(evaluation.Test || 0)).toLocaleString("id-ID") : "-"}
                     description="Pada test set"
                 />
-                <StatCard icon={LuDatabase} label="Test records" value={evaluation ? Number(evaluation.Test).toLocaleString("id-ID") : "-"} description={evaluation?.Split || "Belum dievaluasi"} />
+                <StatCard icon={LuDatabase} label="Data test" value={evaluation ? Number(evaluation.Test).toLocaleString("id-ID") : "-"} description={evaluation?.Split || "Belum dievaluasi"} />
             </div>
+
+            <DomainComparisonChart rows={rows} selectedDomain={selectedDomain} />
+            <FrameworkComparisonChart evaluation={evaluation} />
 
             {predictionStatus !== "success" ? (
                 <div className="monitor-banner">{predictionMessage || "Prediksi per jenis serangan belum dibuat."}</div>
@@ -114,13 +189,13 @@ function AnomalyDetection({ selectedDomain }) {
                         {chartData.length ? (
                             <ResponsiveContainer width="100%" height={340}>
                                 <BarChart data={chartData} margin={{ top: 12, right: 12, left: 0, bottom: 8 }}>
-                                    <CartesianGrid stroke="#eef0f4" vertical={false} />
-                                    <XAxis dataKey="attack" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "#9ca3af" }} />
-                                    <YAxis axisLine={false} tickLine={false} allowDecimals={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
-                                    <Tooltip contentStyle={{ borderRadius: 8, border: "1px solid #e5e8ed", fontSize: 12 }} />
+                                    <CartesianGrid stroke="#eae8e4" vertical={false} />
+                                    <XAxis dataKey="attack" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "#a8a29e" }} />
+                                    <YAxis axisLine={false} tickLine={false} allowDecimals={false} tick={{ fontSize: 11, fill: "#a8a29e" }} />
+                                    <Tooltip contentStyle={{ borderRadius: 8, border: "1px solid #e7e5e3", fontSize: 12 }} />
                                     <Legend wrapperStyle={{ fontSize: 12 }} />
-                                    <Bar dataKey="actual" name="Aktual di test set" fill="#cbd5e1" radius={[4, 4, 0, 0]} />
-                                    <Bar dataKey="predicted" name="Diprediksi model" fill="#2563eb" radius={[4, 4, 0, 0]} />
+                                    <Bar dataKey="actual" name="Aktual di test set" fill="#d6d3d1" radius={[4, 4, 0, 0]} />
+                                    <Bar dataKey="predicted" name="Diprediksi model" fill="#0f766e" radius={[4, 4, 0, 0]} />
                                 </BarChart>
                             </ResponsiveContainer>
                         ) : (

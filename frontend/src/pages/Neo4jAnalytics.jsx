@@ -14,7 +14,7 @@ import SectionHeader from "../components/SectionHeader";
 import StatCard from "../components/StatCard";
 import "../styles/pages/Pages.css";
 
-const PALETTE = ["#2563eb", "#0d9488", "#d97706", "#7c3aed", "#dc2626", "#0284c7", "#16a34a", "#db2777"];
+const PALETTE = ["#0f766e", "#0d9488", "#d97706", "#7c3aed", "#dc2626", "#0284c7", "#16a34a", "#db2777"];
 
 function Neo4jAnalytics() {
     const [result, setResult] = useState(null);
@@ -93,10 +93,10 @@ function Neo4jAnalytics() {
             />
 
             <div className="stats-grid">
-                <StatCard icon={LuNetwork} label="Graph nodes" value={Number(result.nodes).toLocaleString("id-ID")} description="Total node di Neo4j" />
-                <StatCard icon={LuShare2} label="Relationships" value={Number(result.relationships).toLocaleString("id-ID")} description="Relasi terarah antar node" />
-                <StatCard icon={LuActivity} label="Avg. degree (top 10)" value={avgDegree} description="Rata-rata koneksi node teratas" />
-                <StatCard icon={LuActivity} label="Status" value="Connected" description="Query berhasil dijalankan" />
+                <StatCard icon={LuNetwork} label="Total node" value={Number(result.nodes).toLocaleString("id-ID")} description="Seluruh node di Neo4j" />
+                <StatCard icon={LuShare2} label="Relasi" value={Number(result.relationships).toLocaleString("id-ID")} description="Relasi terarah antar node" />
+                <StatCard icon={LuActivity} label="Rata-rata degree (top 10)" value={avgDegree} description="Rata-rata koneksi node teratas" />
+                <StatCard icon={LuActivity} label="Status" value="Terhubung" description="Query berhasil dijalankan" />
             </div>
 
             <ChartCard

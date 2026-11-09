@@ -48,7 +48,6 @@ const onlineOf = (host) => {
     return Date.now() - new Date(host.last_seen).getTime() < 120000;
 };
 
-// Host hasil scan jaringan: tidak ada metrik agent (cpu null)
 const isDiscovered = (host) => num(host?.cpu_percent) === null;
 const hasAgent = (host) => !isDiscovered(host);
 
@@ -71,29 +70,38 @@ const CORR_LABELS = {
 };
 
 function corrColor(v) {
-    // interpola biru (positif) - abu terang (0) - merah (negatif)
     const clamp = Math.max(-1, Math.min(1, v));
     if (clamp >= 0) {
         const a = 0.15 + clamp * 0.85;
-        return `rgba(37, 99, 235, ${a.toFixed(2)})`;
+        return `rgba(15, 118, 110, ${a.toFixed(2)})`;
     }
     const a = 0.15 + Math.abs(clamp) * 0.85;
     return `rgba(220, 38, 38, ${a.toFixed(2)})`;
 }
 
-function HostCorrelationHeatmap({ host }) {
+function HostCorrelationHeatmap({ host, discovered }) {
     const [corr, setCorr] = useState(null);
 
     useEffect(() => {
         let active = true;
-        getMonitoringCorrelation(host)
-            .then((res) => { if (active) setCorr(res.data || null); })
-            .catch(() => {});
-        return () => { active = false; };
+        const fetchCorr = () => {
+            getMonitoringCorrelation(host)
+                .then((res) => { if (active) setCorr(res.data || null); })
+                .catch(() => {});
+        };
+        fetchCorr();
+        const timer = setInterval(fetchCorr, REFRESH_MS);
+        return () => { active = false; clearInterval(timer); };
     }, [host]);
 
     if (!corr || !corr.columns?.length) {
-        return <div className="empty-cell">Menunggu cukup snapshot metrik untuk menghitung korelasi...</div>;
+        return (
+            <div className="empty-cell">
+                {discovered
+                    ? "Host ini hasil scan jaringan (tanpa agent), tidak ada snapshot metrik untuk dihitung."
+                    : "Menunggu cukup snapshot metrik untuk menghitung korelasi..."}
+            </div>
+        );
     }
 
     return (
@@ -115,14 +123,14 @@ function HostCorrelationHeatmap({ host }) {
                                 <td
                                     key={j}
                                     style={{
-                                        background: corrColor(v),
-                                        color: Math.abs(v) > 0.55 ? "#ffffff" : "inherit",
+                                        background: v === null ? "transparent" : corrColor(v),
+                                        color: v !== null && Math.abs(v) > 0.55 ? "#ffffff" : "inherit",
                                         textAlign: "center",
                                         fontWeight: i === j ? 700 : 500
                                     }}
-                                    title={`${CORR_LABELS[rowC]} vs ${CORR_LABELS[corr.columns[j]]}: r=${v}`}
+                                    title={v === null ? `${CORR_LABELS[rowC]} vs ${CORR_LABELS[corr.columns[j]]}: tidak terdefinisi (data konstan)` : `${CORR_LABELS[rowC]} vs ${CORR_LABELS[corr.columns[j]]}: r=${v}`}
                                 >
-                                    {v.toFixed(2)}
+                                    {v === null ? "-" : v.toFixed(2)}
                                 </td>
                             ))}
                         </tr>
@@ -188,7 +196,6 @@ function PcMonitoring() {
         refresh();
         timerRef.current = setInterval(refresh, REFRESH_MS);
         return () => clearInterval(timerRef.current);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [windowMinutes]);
 
     const selected = useMemo(
@@ -255,10 +262,10 @@ function PcMonitoring() {
                                 <p>Klik host untuk melihat detail time-series di bawah. Host "Terdeteksi" ditemukan via scan jaringan tanpa agent.</p>
                             </div>
                             <button className="btn-refresh" onClick={refresh} title="Refresh sekarang">
-                                <LuRefreshCw size={14} /> Refresh
+                                <LuRefreshCw size={14} /> Muat ulang
                             </button>
                         </div>
-                        <div className="table-container">
+                        <div className="table-container scroll-y">
                             <table className="data-table">
                                 <thead>
                                     <tr>
@@ -311,7 +318,7 @@ function PcMonitoring() {
                                 <p>Kejadian CPU/RAM/disk melewati batas aman, beserta pemulihannya. Tersimpan di backend meski agent berhenti.</p>
                             </div>
                             <button className="btn-refresh" onClick={refresh} title="Refresh sekarang">
-                                <LuRefreshCw size={14} /> Refresh
+                                <LuRefreshCw size={14} /> Muat ulang
                             </button>
                         </div>
                         <div className="table-container">
@@ -400,12 +407,12 @@ function PcMonitoring() {
                                 {chartData.length ? (
                                     <ResponsiveContainer width="100%" height={280}>
                                         <LineChart data={chartData} margin={{ top: 12, right: 12, left: 0, bottom: 8 }}>
-                                            <CartesianGrid stroke="#eef0f4" vertical={false} />
-                                            <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} minTickGap={40} />
-                                            <YAxis domain={[0, 100]} axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
-                                            <Tooltip contentStyle={{ borderRadius: 8, border: "1px solid #e5e8ed", fontSize: 12 }} />
+                                            <CartesianGrid stroke="#eae8e4" vertical={false} />
+                                            <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#a8a29e" }} minTickGap={40} />
+                                            <YAxis domain={[0, 100]} axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#a8a29e" }} />
+                                            <Tooltip contentStyle={{ borderRadius: 8, border: "1px solid #e7e5e3", fontSize: 12 }} />
                                             <Legend wrapperStyle={{ fontSize: 12 }} />
-                                            <Line type="monotone" dataKey="cpu" name="CPU %" stroke="#2563eb" dot={false} strokeWidth={2} />
+                                            <Line type="monotone" dataKey="cpu" name="CPU %" stroke="#0f766e" dot={false} strokeWidth={2} />
                                             <Line type="monotone" dataKey="mem" name="RAM %" stroke="#10b981" dot={false} strokeWidth={2} />
                                             <Line type="monotone" dataKey="disk" name="Disk %" stroke="#f59e0b" dot={false} strokeWidth={2} />
                                         </LineChart>
@@ -419,12 +426,12 @@ function PcMonitoring() {
                                 {chartData.length ? (
                                     <ResponsiveContainer width="100%" height={240}>
                                         <AreaChart data={chartData} margin={{ top: 12, right: 12, left: 0, bottom: 8 }}>
-                                            <CartesianGrid stroke="#eef0f4" vertical={false} />
-                                            <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} minTickGap={40} />
-                                            <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
-                                            <Tooltip contentStyle={{ borderRadius: 8, border: "1px solid #e5e8ed", fontSize: 12 }} />
+                                            <CartesianGrid stroke="#eae8e4" vertical={false} />
+                                            <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#a8a29e" }} minTickGap={40} />
+                                            <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#a8a29e" }} />
+                                            <Tooltip contentStyle={{ borderRadius: 8, border: "1px solid #e7e5e3", fontSize: 12 }} />
                                             <Legend wrapperStyle={{ fontSize: 12 }} />
-                                            <Area type="monotone" dataKey="net_recv" name="Download" stroke="#2563eb" fill="#dbeafe" fillOpacity={0.6} strokeWidth={2} />
+                                            <Area type="monotone" dataKey="net_recv" name="Download" stroke="#0f766e" fill="#ccfbf1" fillOpacity={0.6} strokeWidth={2} />
                                             <Area type="monotone" dataKey="net_sent" name="Upload" stroke="#8b5cf6" fill="#ede9fe" fillOpacity={0.6} strokeWidth={2} />
                                         </AreaChart>
                                     </ResponsiveContainer>
@@ -437,7 +444,7 @@ function PcMonitoring() {
                                 title="Korelasi metrik host (live)"
                                 description={`Dihitung ulang dari snapshot monitoring terbaru${selected ? ` — ${selected.hostname}` : ""}`}
                             >
-                                <HostCorrelationHeatmap host={selectedHost} />
+                                <HostCorrelationHeatmap host={selectedHost} discovered={selected ? !hasAgent(selected) : false} />
                             </ChartBlock>
 
                             <div className="table-card">

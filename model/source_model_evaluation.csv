@@ -1,0 +1,13 @@
+Domain,Source_File,Train,Test,Features,Precision,Recall,F1,Train_Positive_Rate,Test_Positive_Rate,Split,Scope
+IoT,IoT_Fridge.csv,3200,800,27,0.543859649122807,0.2767857142857143,0.3668639053254438,0.045,0.56,chronological 80/20 within source,operational monitoring of a known source; not new-device generalization
+IoT,IoT_GPS_Tracker.csv,3200,800,27,0.44886363636363635,0.19082125603864733,0.2677966101694915,0.0396875,0.5175,chronological 80/20 within source,operational monitoring of a known source; not new-device generalization
+IoT,IoT_Garage_Door.csv,3200,800,27,0.53375,1.0,0.6960065199674002,0.0321875,0.53375,chronological 80/20 within source,operational monitoring of a known source; not new-device generalization
+IoT,IoT_Modbus.csv,3200,800,27,0.08196721311475409,0.04504504504504504,0.05813953488372093,0.2509375,0.13875,chronological 80/20 within source,operational monitoring of a known source; not new-device generalization
+IoT,IoT_Motion_Light.csv,3200,800,27,0.49498327759197325,0.34823529411764703,0.4088397790055249,0.0471875,0.53125,chronological 80/20 within source,operational monitoring of a known source; not new-device generalization
+IoT,IoT_Thermostat.csv,3200,800,27,0.6363636363636364,0.1044776119402985,0.1794871794871795,0.0209375,0.58625,chronological 80/20 within source,operational monitoring of a known source; not new-device generalization
+IoT,IoT_Weather.csv,3200,800,27,0.5,0.03076923076923077,0.057971014492753624,0.0559375,0.4875,chronological 80/20 within source,operational monitoring of a known source; not new-device generalization
+Linux,Linux_process_1.csv,3200,800,31,,,,0.143125,0.0,chronological 80/20 within source,not evaluable: one class in temporal train/test
+Linux,Linux_process_2.csv,3200,800,31,,,,0.23125,0.0,chronological 80/20 within source,not evaluable: one class in temporal train/test
+Linux,linux_disk_2.csv,3200,800,31,,,,0.160625,0.0,chronological 80/20 within source,not evaluable: one class in temporal train/test
+Linux,linux_memory1.csv,3200,800,31,,,,0.1546875,0.0,chronological 80/20 within source,not evaluable: one class in temporal train/test
+Linux,linux_memory2.csv,3200,800,31,,,,0.1103125,0.0,chronological 80/20 within source,not evaluable: one class in temporal train/test

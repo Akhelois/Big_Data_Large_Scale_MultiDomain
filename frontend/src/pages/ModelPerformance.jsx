@@ -24,7 +24,7 @@ import StatCard from "../components/StatCard";
 import { getPerformance } from "../api/dashboardApi";
 import "../styles/pages/Pages.css";
 
-const ACCENT = "#2563eb";
+const ACCENT = "#0f766e";
 const number = new Intl.NumberFormat("id-ID");
 
 const fmtPct = (v) =>
@@ -64,7 +64,7 @@ function ModelPerformance({ selectedDomain }) {
                 setLoading(true);
                 const response = await getPerformance();
                 if (response.status !== "success") {
-                    throw new Error(response.message || "Failed to load performance data");
+                    throw new Error(response.message || "Gagal memuat data performa");
                 }
                 if (active) setPerformanceData(response.data || []);
             } catch (err) {
@@ -81,10 +81,10 @@ function ModelPerformance({ selectedDomain }) {
     if (loading) {
         return (
             <div className="page-content">
-                <SectionHeader title="Model Performance" description="Evaluation results across the monitored domains." />
+                <SectionHeader title="Model Performance" description="Hasil evaluasi di seluruh domain yang dimonitor." />
                 <div className="loading-state">
                     <LuLoader size={18} className="spin" />
-                    <span>Loading model performance...</span>
+                    <span>Memuat performa model...</span>
                 </div>
             </div>
         );
@@ -93,10 +93,10 @@ function ModelPerformance({ selectedDomain }) {
     if (error) {
         return (
             <div className="page-content">
-                <SectionHeader title="Model Performance" description="Evaluation results across the monitored domains." />
+                <SectionHeader title="Model Performance" description="Hasil evaluasi di seluruh domain yang dimonitor." />
                 <div className="error-state">
                     <LuTriangleAlert size={18} />
-                    <span>Failed to load performance: {error}</span>
+                    <span>Gagal memuat performa: {error}</span>
                 </div>
             </div>
         );
@@ -127,32 +127,32 @@ function ModelPerformance({ selectedDomain }) {
         <div className="page-content">
             <SectionHeader
                 title="Model Performance"
-                description="Evaluation results across the monitored domains."
+                description="Hasil evaluasi di seluruh domain yang dimonitor."
             />
 
             <div className="stats-grid">
-                <StatCard icon={LuChartBar} label="Domains evaluated" value={data.length} description="Rows in the evaluation report" />
+                <StatCard icon={LuChartBar} label="Domain dievaluasi" value={data.length} description="Baris pada laporan evaluasi" />
                 <StatCard
                     icon={LuTrendingUp}
-                    label="Best F1 score"
+                    label="Skor F1 terbaik"
                     value={bestDomain ? fmtPct(bestDomain.F1) : "-"}
-                    description={bestDomain ? bestDomain.Domain : "No data"}
+                    description={bestDomain ? bestDomain.Domain : "Tidak ada data"}
                 />
-                <StatCard icon={LuGauge} label="Average F1" value={fmtPct(avgF1)} description="Mean across selected domains" />
-                <StatCard icon={LuShieldCheck} label="Records evaluated" value={number.format(totalRecords)} description="Train + test coverage" />
+                <StatCard icon={LuGauge} label="Rata-rata F1" value={fmtPct(avgF1)} description="Rata-rata pada domain terpilih" />
+                <StatCard icon={LuShieldCheck} label="Data dievaluasi" value={number.format(totalRecords)} description="Cakupan train + test" />
             </div>
 
-            <ChartCard title="Performance by Domain" description="Accuracy, Precision, Recall and F1 score per domain.">
+            <ChartCard title="Performa per Domain" description="Skor Accuracy, Precision, Recall, dan F1 per domain.">
                 {chartData.length ? (
                     <ResponsiveContainer width="100%" height={360}>
                         <BarChart data={chartData} margin={{ top: 12, right: 12, left: 0, bottom: 4 }} barGap={3}>
-                            <CartesianGrid stroke="#eef0f4" vertical={false} />
-                            <XAxis dataKey="domain" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "#9ca3af" }} />
-                            <YAxis domain={[0, 1]} axisLine={false} tickLine={false} tickFormatter={(v) => `${Math.round(v * 100)}%`} tick={{ fontSize: 11, fill: "#9ca3af" }} />
+                            <CartesianGrid stroke="#eae8e4" vertical={false} />
+                            <XAxis dataKey="domain" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "#a8a29e" }} />
+                            <YAxis domain={[0, 1]} axisLine={false} tickLine={false} tickFormatter={(v) => `${Math.round(v * 100)}%`} tick={{ fontSize: 11, fill: "#a8a29e" }} />
                             <Tooltip
-                                cursor={{ fill: "rgba(37,99,235,0.04)" }}
+                                cursor={{ fill: "rgba(15,118,110,0.04)" }}
                                 formatter={(v) => `${(Number(v) * 100).toFixed(2)}%`}
-                                contentStyle={{ borderRadius: 8, border: "1px solid #e5e8ed", boxShadow: "0 4px 12px rgba(0,0,0,0.08)", fontSize: 12 }}
+                                contentStyle={{ borderRadius: 8, border: "1px solid #e7e5e3", boxShadow: "0 4px 12px rgba(0,0,0,0.08)", fontSize: 12 }}
                             />
                             <Legend wrapperStyle={{ fontSize: 12 }} iconType="circle" iconSize={8} />
                             <Bar dataKey="Accuracy" fill={ACCENT} radius={[4, 4, 0, 0]} />
@@ -162,15 +162,15 @@ function ModelPerformance({ selectedDomain }) {
                         </BarChart>
                     </ResponsiveContainer>
                 ) : (
-                    <div className="empty-state">No evaluation rows for this selection.</div>
+                    <div className="empty-state">Tidak ada baris evaluasi untuk pilihan ini.</div>
                 )}
             </ChartCard>
 
             <div className="table-card">
                 <div className="table-header">
                     <div>
-                        <h3>Detailed Evaluation</h3>
-                        <p>Model metrics for each domain.</p>
+                        <h3>Evaluasi Detail</h3>
+                        <p>Metrik model untuk setiap domain.</p>
                     </div>
                 </div>
                 <div className="table-container">
@@ -178,7 +178,7 @@ function ModelPerformance({ selectedDomain }) {
                         <thead>
                             <tr>
                                 <th>Domain</th>
-                                <th>Records</th>
+                                <th>Data</th>
                                 <th>Train</th>
                                 <th>Test</th>
                                 <th>Accuracy</th>

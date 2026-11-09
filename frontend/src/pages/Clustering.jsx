@@ -18,7 +18,7 @@ import ChartCard from "../components/ChartCard";
 import { getClusters, getClusteringScatter } from "../api/dashboardApi";
 import "../styles/pages/Pages.css";
 
-const CLUSTER_COLORS = ["#2563eb", "#d97706", "#0d9488", "#7c3aed", "#dc2626"];
+const CLUSTER_COLORS = ["#0f766e", "#d97706", "#0d9488", "#7c3aed", "#dc2626"];
 
 function KMeansScatterPanel() {
     const [scatter, setScatter] = useState(null);
@@ -67,13 +67,13 @@ function KMeansScatterPanel() {
                         >
                             <ResponsiveContainer width="100%" height={260}>
                                 <ScatterChart margin={{ top: 8, right: 12, left: 0, bottom: 8 }}>
-                                    <CartesianGrid stroke="#eef0f4" />
-                                    <XAxis type="number" dataKey="x" name="PC1" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "#9ca3af" }} />
-                                    <YAxis type="number" dataKey="y" name="PC2" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "#9ca3af" }} width={40} />
+                                    <CartesianGrid stroke="#eae8e4" />
+                                    <XAxis type="number" dataKey="x" name="PC1" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "#a8a29e" }} />
+                                    <YAxis type="number" dataKey="y" name="PC2" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "#a8a29e" }} width={40} />
                                     <ZAxis range={[35, 36]} />
                                     <Tooltip
                                         cursor={{ strokeDasharray: "3 3" }}
-                                        contentStyle={{ borderRadius: 8, border: "1px solid #e5e8ed", fontSize: 12 }}
+                                        contentStyle={{ borderRadius: 8, border: "1px solid #e7e5e3", fontSize: 12 }}
                                         formatter={(v, name) => [Number(v).toFixed(2), name]}
                                         labelFormatter={() => ""}
                                     />
@@ -91,7 +91,7 @@ function KMeansScatterPanel() {
                                         name="centroid"
                                         data={dom.centroids.map((c, i) => ({ ...c, cluster: i }))}
                                         shape="cross"
-                                        fill="#111827"
+                                        fill="#292524"
                                     />
                                 </ScatterChart>
                             </ResponsiveContainer>
@@ -122,7 +122,7 @@ function Clustering({ selectedDomain }) {
                 setLoading(true);
                 const response = await getClusters();
                 if (response.status !== "success") {
-                    throw new Error(response.message || "Failed to load clustering data");
+                    throw new Error(response.message || "Gagal memuat data clustering");
                 }
                 setData(response.data || []);
             } catch (err) {
@@ -147,8 +147,8 @@ function Clustering({ selectedDomain }) {
     if (loading) {
         return (
             <div className="page-content">
-                <SectionHeader title="Clustering" description="Cluster analysis generated from the machine learning pipeline." />
-                <div className="loading-state">Loading clustering data...</div>
+                <SectionHeader title="Clustering" description="Analisis cluster dari pipeline machine learning." />
+                <div className="loading-state">Memuat data clustering...</div>
             </div>
         );
     }
@@ -156,27 +156,27 @@ function Clustering({ selectedDomain }) {
     if (error) {
         return (
             <div className="page-content">
-                <SectionHeader title="Clustering" description="Cluster analysis generated from the machine learning pipeline." />
-                <div className="error-state">Failed to load clustering data: {error}</div>
+                <SectionHeader title="Clustering" description="Analisis cluster dari pipeline machine learning." />
+                <div className="error-state">Gagal memuat data clustering: {error}</div>
             </div>
         );
     }
 
     return (
         <div className="page-content">
-            <SectionHeader title="Clustering" description="Cluster analysis generated from the machine learning pipeline." />
+            <SectionHeader title="Clustering" description="Analisis cluster dari pipeline machine learning." />
 
-            <ChartCard title="Cluster Distribution" description="Number of records assigned to each cluster.">
+            <ChartCard title="Distribusi Cluster" description="Jumlah data pada setiap cluster.">
                 {chartData.length === 0 ? (
-                    <div className="empty-state">No clustering data available.</div>
+                    <div className="empty-state">Belum ada data clustering.</div>
                 ) : (
                     <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={chartData} margin={{ top: 12, right: 12, left: 0, bottom: 4 }}>
-                            <CartesianGrid stroke="#eef0f4" vertical={false} />
-                            <XAxis dataKey="clusterLabel" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
-                            <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
-                            <Tooltip contentStyle={{ borderRadius: 8, border: "1px solid #e5e8ed", fontSize: 12 }} />
-                            <Bar dataKey="Records" name="Records" fill="#2563eb" radius={[4, 4, 0, 0]} />
+                            <CartesianGrid stroke="#eae8e4" vertical={false} />
+                            <XAxis dataKey="clusterLabel" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#a8a29e" }} />
+                            <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#a8a29e" }} />
+                            <Tooltip contentStyle={{ borderRadius: 8, border: "1px solid #e7e5e3", fontSize: 12 }} />
+                            <Bar dataKey="Records" name="Data" fill="#0f766e" radius={[4, 4, 0, 0]} />
                         </BarChart>
                     </ResponsiveContainer>
                 )}
@@ -197,13 +197,13 @@ function Clustering({ selectedDomain }) {
             <div className="table-card">
                 <div className="table-header">
                     <div>
-                        <h3>Cluster Summary</h3>
-                        <p>Summary statistics generated by the clustering model.</p>
+                        <h3>Ringkasan Cluster</h3>
+                        <p>Statistik ringkasan dari model clustering.</p>
                     </div>
                 </div>
                 <div className="table-container">
                     {visibleData.length === 0 ? (
-                        <div className="empty-state">No cluster summary available.</div>
+                        <div className="empty-state">Belum ada ringkasan cluster.</div>
                     ) : (
                         <table className="data-table">
                             <thead>
