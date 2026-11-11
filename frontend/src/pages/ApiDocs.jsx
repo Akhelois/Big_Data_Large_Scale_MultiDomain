@@ -1,10 +1,12 @@
+
 import { LuExternalLink } from "react-icons/lu";
 
-import { API_BASE_URL } from "../api/dashboardApi";
 import SectionHeader from "../components/SectionHeader";
 import "../styles/pages/Pages.css";
 
 function ApiDocs() {
+    const docsUrl = "/api/docs";
+
     return (
         <div className="page-content">
             <SectionHeader
@@ -16,20 +18,22 @@ function ApiDocs() {
                 <div className="table-header">
                     <div>
                         <h3>Swagger UI</h3>
-                        <p>{API_BASE_URL}/docs</p>
+                        <p>{docsUrl}</p>
                     </div>
                     <a
                         className="btn-refresh"
-                        href={`${API_BASE_URL}/docs`}
+                        href={docsUrl}
                         target="_blank"
                         rel="noreferrer"
                     >
-                        <LuExternalLink size={14} /> Buka di tab baru
+                        <LuExternalLink size={14} />
+                        Buka di tab baru
                     </a>
                 </div>
+
                 <iframe
                     className="api-docs-frame"
-                    src={`${API_BASE_URL}/docs`}
+                    src={docsUrl}
                     title="FastAPI Swagger UI"
                 />
             </div>

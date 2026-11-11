@@ -228,15 +228,15 @@
   "split": "stratified source-aware row split",
   "k": 2,
   "anomaly_method": "K-Means squared distance; threshold calibrated on train labels (max F1)",
-  "anomaly_quantile": 0.4699743798037868,
-  "rf_probability_threshold": 0.3985650059549565,
+  "anomaly_quantile": 0.37999125164031744,
+  "rf_probability_threshold": 0.41904685195899904,
   "rf_threshold_scope": "per_source",
   "rf_thresholds": {
     "Linux_process_1.csv": 0.35503329476459905,
-    "Linux_process_2.csv": 0.34062875765434253,
-    "linux_disk_2.csv": 0.4106919579102492,
+    "Linux_process_2.csv": 0.43336166034456014,
+    "linux_disk_2.csv": 0.41422396964470576,
     "linux_memory1.csv": 0.29315256252844724,
-    "linux_memory2.csv": 0.5933184569171445
+    "linux_memory2.csv": 0.5994627725126833
   },
   "temporal_features": [
     "Metric_Activity__rmean",
@@ -432,7 +432,7 @@
     "second"
   ],
   "temporal_roll_window": 30,
-  "anomaly_threshold": 71.48434316468408,
+  "anomaly_threshold": 98.85904757563286,
   "attack_type_labels": [
     "normal",
     "dos",

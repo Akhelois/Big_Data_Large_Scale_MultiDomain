@@ -200,17 +200,17 @@
   "split": "stratified source-aware row split",
   "k": 2,
   "anomaly_method": "K-Means squared distance; threshold calibrated on train labels (max F1)",
-  "anomaly_quantile": 0.820003570472195,
-  "rf_probability_threshold": 0.5064381951084809,
+  "anomaly_quantile": 0.9399714362224404,
+  "rf_probability_threshold": 0.5176459506339086,
   "rf_threshold_scope": "per_source",
   "rf_thresholds": {
-    "IoT_Fridge.csv": 0.43308179820569,
-    "IoT_GPS_Tracker.csv": 0.5788115944567158,
-    "IoT_Garage_Door.csv": 0.735191269006746,
+    "IoT_Fridge.csv": 0.4135727184456596,
+    "IoT_GPS_Tracker.csv": 0.5320644629359855,
+    "IoT_Garage_Door.csv": 0.8233431865513237,
     "IoT_Modbus.csv": 0.5,
-    "IoT_Motion_Light.csv": 0.5,
-    "IoT_Thermostat.csv": 0.44028400860908384,
-    "IoT_Weather.csv": 0.35769869548113
+    "IoT_Motion_Light.csv": 0.4424384431343345,
+    "IoT_Thermostat.csv": 0.5,
+    "IoT_Weather.csv": 0.4121028433700574
   },
   "temporal_features": [
     "Metric_Activity__rmean",
@@ -382,7 +382,7 @@
     "second"
   ],
   "temporal_roll_window": 30,
-  "anomaly_threshold": 74.38793176561157,
+  "anomaly_threshold": 28.298832914016952,
   "attack_type_labels": [
     "normal",
     "backdoor",

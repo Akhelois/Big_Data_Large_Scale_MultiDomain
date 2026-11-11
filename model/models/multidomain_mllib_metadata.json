@@ -40,7 +40,7 @@
   "k": 2,
   "anomaly_method": "K-Means squared distance; threshold calibrated on train labels (max F1)",
   "anomaly_quantile": 1.0,
-  "rf_probability_threshold": 0.2903219008377591,
+  "rf_probability_threshold": 0.2318058694476349,
   "rf_threshold_scope": "global",
   "rf_thresholds": {},
   "temporal_features": [

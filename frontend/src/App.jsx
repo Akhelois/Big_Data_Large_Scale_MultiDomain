@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Sidebar from "./components/Sidebar";
-import Topbar from "./components/Topbar";
+import Topbar from "\./components/TopBar";
 import Overview from "./pages/Overview";
 import Dataset from "./pages/Dataset";
 import ModelPerformance from "./pages/ModelPerformance";

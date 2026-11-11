@@ -1,12 +1,12 @@
 {
   "scope": "per_source",
   "thresholds": {
-    "IoT_Fridge.csv": 0.3584360951382047,
-    "IoT_GPS_Tracker.csv": 0.5,
-    "IoT_Garage_Door.csv": 0.6050822679926766,
+    "IoT_Fridge.csv": 0.31200391500133057,
+    "IoT_GPS_Tracker.csv": 0.4540827946026591,
+    "IoT_Garage_Door.csv": 0.5631016239649043,
     "IoT_Modbus.csv": 0.46187671114510176,
-    "IoT_Motion_Light.csv": 0.3535878499354268,
-    "IoT_Thermostat.csv": 0.4115558837311235,
-    "IoT_Weather.csv": 0.31331153597714934
+    "IoT_Motion_Light.csv": 0.3278767120606602,
+    "IoT_Thermostat.csv": 0.40759906111387645,
+    "IoT_Weather.csv": 0.4927074697177782
   }
 }

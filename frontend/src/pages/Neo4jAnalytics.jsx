@@ -30,7 +30,7 @@ function Neo4jAnalytics() {
 
     const graph = useMemo(() => {
         if (result?.status !== "success") return { nodes: [], edges: [], labels: [] };
-        const rawNodes = (result.top_nodes || []).map((node) => ({
+        const rawNodes = (result.all_nodes || result.top_nodes || []).map((node) => ({
             id: node.name,
             label: (node.labels || [])[0] || "Node",
             degree: node.degree || 0,
@@ -95,13 +95,13 @@ function Neo4jAnalytics() {
             <div className="stats-grid">
                 <StatCard icon={LuNetwork} label="Total node" value={Number(result.nodes).toLocaleString("id-ID")} description="Seluruh node di Neo4j" />
                 <StatCard icon={LuShare2} label="Relasi" value={Number(result.relationships).toLocaleString("id-ID")} description="Relasi terarah antar node" />
-                <StatCard icon={LuActivity} label="Rata-rata degree (top 10)" value={avgDegree} description="Rata-rata koneksi node teratas" />
+                <StatCard icon={LuActivity} label={`Rata-rata degree (${graph.nodes.length} node)`} value={avgDegree} description="Rata-rata koneksi node ditampilkan" />
                 <StatCard icon={LuActivity} label="Status" value="Terhubung" description="Query berhasil dijalankan" />
             </div>
 
             <ChartCard
                 title="Visualisasi Graph"
-                description="Top 10 node paling terhubung. Ukuran node mewakili degree (jumlah koneksi)."
+                description={`Menampilkan ${graph.nodes.length} dari ${result.nodes} node. Ukuran node mewakili degree (jumlah koneksi).`}
             >
                 {graph.nodes.length ? (
                     <>

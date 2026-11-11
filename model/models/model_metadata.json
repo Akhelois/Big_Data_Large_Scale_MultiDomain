@@ -128,13 +128,6 @@
       "categorical_features": []
     },
     {
-      "domain": "IoT",
-      "file": "IoT_Weather.csv",
-      "rows_used": 650242,
-      "numeric_features": [],
-      "categorical_features": []
-    },
-    {
       "domain": "Linux",
       "file": "linux_disk_2.csv",
       "rows_used": 927361,
@@ -152,6 +145,20 @@
       "domain": "Linux",
       "file": "Linux_process_2.csv",
       "rows_used": 927968,
+      "numeric_features": [],
+      "categorical_features": []
+    },
+    {
+      "domain": "Linux",
+      "file": "Linux_process_1.csv",
+      "rows_used": 1000000,
+      "numeric_features": [],
+      "categorical_features": []
+    },
+    {
+      "domain": "IoT",
+      "file": "IoT_Weather.csv",
+      "rows_used": 650242,
       "numeric_features": [],
       "categorical_features": []
     },
@@ -184,15 +191,15 @@
       "categorical_features": []
     },
     {
-      "domain": "Linux",
-      "file": "Linux_process_1.csv",
+      "domain": "Network",
+      "file": "Network_dataset_1.csv",
       "rows_used": 1000000,
       "numeric_features": [],
       "categorical_features": []
     },
     {
-      "domain": "Network",
-      "file": "Network_dataset_1.csv",
+      "domain": "Linux",
+      "file": "linux_memory2.csv",
       "rows_used": 1000000,
       "numeric_features": [],
       "categorical_features": []
@@ -214,13 +221,6 @@
     {
       "domain": "Network",
       "file": "Network_dataset_11.csv",
-      "rows_used": 1000000,
-      "numeric_features": [],
-      "categorical_features": []
-    },
-    {
-      "domain": "Linux",
-      "file": "linux_memory2.csv",
       "rows_used": 1000000,
       "numeric_features": [],
       "categorical_features": []
@@ -248,13 +248,6 @@
     },
     {
       "domain": "Network",
-      "file": "Network_dataset_15.csv",
-      "rows_used": 1000000,
-      "numeric_features": [],
-      "categorical_features": []
-    },
-    {
-      "domain": "Network",
       "file": "Network_dataset_16.csv",
       "rows_used": 1000000,
       "numeric_features": [],
@@ -263,6 +256,13 @@
     {
       "domain": "Network",
       "file": "Network_dataset_18.csv",
+      "rows_used": 1000000,
+      "numeric_features": [],
+      "categorical_features": []
+    },
+    {
+      "domain": "Network",
+      "file": "Network_dataset_15.csv",
       "rows_used": 1000000,
       "numeric_features": [],
       "categorical_features": []
@@ -318,13 +318,6 @@
     },
     {
       "domain": "Network",
-      "file": "Network_dataset_6.csv",
-      "rows_used": 1000000,
-      "numeric_features": [],
-      "categorical_features": []
-    },
-    {
-      "domain": "Network",
       "file": "Network_dataset_23.csv",
       "rows_used": 339021,
       "numeric_features": [],
@@ -339,14 +332,14 @@
     },
     {
       "domain": "Network",
-      "file": "Network_dataset_7.csv",
+      "file": "Network_dataset_6.csv",
       "rows_used": 1000000,
       "numeric_features": [],
       "categorical_features": []
     },
     {
       "domain": "Network",
-      "file": "Network_dataset_8.csv",
+      "file": "Network_dataset_7.csv",
       "rows_used": 1000000,
       "numeric_features": [],
       "categorical_features": []
@@ -369,6 +362,13 @@
       "domain": "Windows",
       "file": "windows7_dataset.csv",
       "rows_used": 28367,
+      "numeric_features": [],
+      "categorical_features": []
+    },
+    {
+      "domain": "Network",
+      "file": "Network_dataset_8.csv",
+      "rows_used": 1000000,
       "numeric_features": [],
       "categorical_features": []
     }

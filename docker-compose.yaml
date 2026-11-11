@@ -1,3 +1,4 @@
+
 services:
   # Frontend (React)
   frontend:
@@ -6,11 +7,11 @@ services:
       dockerfile: Dockerfile
     container_name: react_frontend
     ports:
-      - "1234:1234"
+      - "1234:80"
     volumes:
       - ./frontend:/app
 
-  # Hadoop namenode untuk HDFS (Biar jalan juga datanodenya)
+  # Hadoop namenode untuk HDFS
   namenode:
     image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
     container_name: namenode
@@ -25,6 +26,22 @@ services:
       HDFS_CONF_dfs_namenode_rpc___bind___host: "0.0.0.0"
     volumes:
       - namenode_data:/hadoop/dfs/name
+
+  # FastAPI Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fastapi_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    environment:
+      NEO4J_URI: bolt://host.docker.internal:7687
+    volumes:
+      - ./model:/model
 
   datanode:
     image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
@@ -45,7 +62,7 @@ services:
     volumes:
       - datanode_data:/hadoop/dfs/data
 
-  # Notebook buat sih jupiter
+  # Jupyter Notebook
   notebook:
     build:
       context: ./model
@@ -61,7 +78,7 @@ services:
       - namenode
       - datanode
 
-# Definisikan volume persistent agar data Hadoop tidak hilang saat docker dimatikan
+# Persistent volumes
 volumes:
   namenode_data:
   datanode_data:

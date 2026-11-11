@@ -1,79 +1,79 @@
 Domain,Framework,Attack_Type,Actual_Count,Predicted_Count,Precision,Recall,F1,Split
-Multidomain,Spark MLlib,backdoor,1348,969,0.9824561403508771,0.7062314540059347,0.8217522658610271,stratified source-aware row split
-Multidomain,Spark MLlib,ddos,5253,5112,0.9755477308294209,0.9493622691795165,0.9622768933912205,stratified source-aware row split
-Multidomain,Spark MLlib,dos,2437,2277,0.9956082564778217,0.9302421009437833,0.9618158676283411,stratified source-aware row split
-Multidomain,Spark MLlib,injection,561,352,0.9431818181818182,0.5918003565062389,0.7272727272727272,stratified source-aware row split
-Multidomain,Spark MLlib,mitm,6,0,0.0,0.0,0.0,stratified source-aware row split
-Multidomain,Spark MLlib,password,1810,1424,0.9845505617977528,0.7745856353591161,0.8670377241805813,stratified source-aware row split
-Multidomain,Spark MLlib,ransomware,79,6,1.0,0.0759493670886076,0.1411764705882353,stratified source-aware row split
-Multidomain,Spark MLlib,scanning,5768,5747,0.993561858360884,0.9899445214979196,0.9917498914459401,stratified source-aware row split
-Multidomain,Spark MLlib,xss,1785,1799,0.9483046136742634,0.9557422969187676,0.9520089285714287,stratified source-aware row split
-Multidomain,scikit-learn,backdoor,1348,1856,0.6831896551724138,0.9406528189910979,0.7915106117353307,stratified source-aware row split
-Multidomain,scikit-learn,ddos,5253,4858,0.968299711815562,0.8954882924043404,0.9304717634259718,stratified source-aware row split
-Multidomain,scikit-learn,dos,2437,2303,0.990447242726878,0.9359868691013541,0.9624472573839663,stratified source-aware row split
-Multidomain,scikit-learn,injection,561,731,0.6238030095759234,0.8128342245989305,0.7058823529411764,stratified source-aware row split
-Multidomain,scikit-learn,mitm,6,5,0.6,0.5,0.5454545454545454,stratified source-aware row split
-Multidomain,scikit-learn,password,1810,1899,0.7851500789889415,0.8237569060773481,0.803990293879752,stratified source-aware row split
-Multidomain,scikit-learn,ransomware,79,245,0.27755102040816326,0.8607594936708861,0.4197530864197531,stratified source-aware row split
-Multidomain,scikit-learn,scanning,5768,5784,0.9776970954356846,0.9804091539528432,0.979051246537396,stratified source-aware row split
-Multidomain,scikit-learn,xss,1785,1793,0.9414389291689905,0.9456582633053221,0.9435438792621575,stratified source-aware row split
-IoT,Spark MLlib,backdoor,423,125,0.912,0.2695035460992908,0.41605839416058393,stratified source-aware row split
-IoT,Spark MLlib,ddos,43,0,0.0,0.0,0.0,stratified source-aware row split
-IoT,Spark MLlib,injection,85,2,1.0,0.023529411764705882,0.04597701149425288,stratified source-aware row split
-IoT,Spark MLlib,password,250,13,1.0,0.052,0.0988593155893536,stratified source-aware row split
-IoT,Spark MLlib,ransomware,30,0,0.0,0.0,0.0,stratified source-aware row split
-IoT,Spark MLlib,scanning,6,0,0.0,0.0,0.0,stratified source-aware row split
-IoT,Spark MLlib,xss,12,0,0.0,0.0,0.0,stratified source-aware row split
-IoT,scikit-learn,backdoor,423,544,0.5955882352941176,0.7659574468085106,0.6701137538779732,stratified source-aware row split
-IoT,scikit-learn,ddos,43,244,0.15163934426229508,0.8604651162790697,0.25783972125435534,stratified source-aware row split
-IoT,scikit-learn,injection,85,188,0.42021276595744683,0.9294117647058824,0.5787545787545788,stratified source-aware row split
-IoT,scikit-learn,password,250,338,0.5946745562130178,0.804,0.6836734693877552,stratified source-aware row split
-IoT,scikit-learn,ransomware,30,91,0.27472527472527475,0.8333333333333334,0.4132231404958678,stratified source-aware row split
-IoT,scikit-learn,scanning,6,10,0.1,0.16666666666666666,0.125,stratified source-aware row split
-IoT,scikit-learn,xss,12,20,0.35,0.5833333333333334,0.4375,stratified source-aware row split
-Linux,Spark MLlib,ddos,137,21,0.42857142857142855,0.06569343065693431,0.1139240506329114,stratified source-aware row split
-Linux,Spark MLlib,dos,142,5,0.6,0.02112676056338028,0.04081632653061224,stratified source-aware row split
-Linux,Spark MLlib,injection,89,2,0.5,0.011235955056179775,0.021978021978021976,stratified source-aware row split
-Linux,Spark MLlib,password,89,4,0.25,0.011235955056179775,0.02150537634408602,stratified source-aware row split
-Linux,Spark MLlib,scanning,27,3,0.0,0.0,0.0,stratified source-aware row split
-Linux,Spark MLlib,xss,26,4,0.25,0.038461538461538464,0.06666666666666668,stratified source-aware row split
-Linux,scikit-learn,ddos,137,225,0.22666666666666666,0.3722627737226277,0.2817679558011049,stratified source-aware row split
-Linux,scikit-learn,dos,142,115,0.2956521739130435,0.23943661971830985,0.26459143968871596,stratified source-aware row split
-Linux,scikit-learn,injection,89,225,0.10666666666666667,0.2696629213483146,0.15286624203821655,stratified source-aware row split
-Linux,scikit-learn,password,89,124,0.23387096774193547,0.3258426966292135,0.27230046948356806,stratified source-aware row split
-Linux,scikit-learn,scanning,27,75,0.17333333333333334,0.48148148148148145,0.25490196078431376,stratified source-aware row split
-Linux,scikit-learn,xss,26,44,0.1590909090909091,0.2692307692307692,0.19999999999999998,stratified source-aware row split
-Network,Spark MLlib,backdoor,875,874,0.9839816933638444,0.9828571428571429,0.983419096626644,stratified source-aware row split
-Network,Spark MLlib,ddos,4920,4965,0.9887210473313193,0.9977642276422765,0.9932220536165908,stratified source-aware row split
-Network,Spark MLlib,dos,2281,2277,0.994729907773386,0.9929855326611136,0.9938569548047388,stratified source-aware row split
-Network,Spark MLlib,injection,374,379,0.9604221635883905,0.9732620320855615,0.9667994687915006,stratified source-aware row split
-Network,Spark MLlib,mitm,5,0,0.0,0.0,0.0,stratified source-aware row split
-Network,Spark MLlib,password,1376,1379,0.9898477157360406,0.9920058139534884,0.9909255898366606,stratified source-aware row split
-Network,Spark MLlib,ransomware,58,13,0.8461538461538461,0.1896551724137931,0.30985915492957744,stratified source-aware row split
-Network,Spark MLlib,scanning,5691,5725,0.993886462882096,0.9998242839571253,0.9968465311843029,stratified source-aware row split
-Network,Spark MLlib,xss,1685,1743,0.9650028686173264,0.9982195845697329,0.9813302217036172,stratified source-aware row split
-Network,scikit-learn,backdoor,875,880,0.9829545454545454,0.9885714285714285,0.9857549857549858,stratified source-aware row split
-Network,scikit-learn,ddos,4920,4275,0.9695906432748538,0.842479674796748,0.9015769439912997,stratified source-aware row split
-Network,scikit-learn,dos,2281,2279,0.9973672663448881,0.9964927663305567,0.9969298245614036,stratified source-aware row split
-Network,scikit-learn,injection,374,455,0.7912087912087912,0.9625668449197861,0.8685162846803377,stratified source-aware row split
-Network,scikit-learn,mitm,5,6,0.5,0.6,0.5454545454545454,stratified source-aware row split
-Network,scikit-learn,password,1376,1914,0.6718913270637409,0.934593023255814,0.7817629179331307,stratified source-aware row split
-Network,scikit-learn,ransomware,58,97,0.5051546391752577,0.8448275862068966,0.632258064516129,stratified source-aware row split
-Network,scikit-learn,scanning,5691,5729,0.977308430790714,0.9838341240555263,0.9805604203152364,stratified source-aware row split
-Network,scikit-learn,xss,1685,1715,0.9096209912536443,0.9258160237388724,0.9176470588235293,stratified source-aware row split
-Windows,Spark MLlib,backdoor,53,53,1.0,1.0,1.0,stratified source-aware row split
-Windows,Spark MLlib,ddos,158,159,0.9937106918238994,1.0,0.9968454258675079,stratified source-aware row split
-Windows,Spark MLlib,dos,9,10,0.7,0.7777777777777778,0.7368421052631577,stratified source-aware row split
-Windows,Spark MLlib,injection,40,40,0.975,0.975,0.975,stratified source-aware row split
-Windows,Spark MLlib,password,113,110,0.990909090909091,0.9646017699115044,0.9775784753363229,stratified source-aware row split
+Multidomain,Spark MLlib,backdoor,1354,960,0.9833333333333333,0.6971935007385525,0.8159031979256698,stratified source-aware row split
+Multidomain,Spark MLlib,ddos,5274,5102,0.9747157977263818,0.9429275692074327,0.9585582112567465,stratified source-aware row split
+Multidomain,Spark MLlib,dos,2408,2248,0.9937722419928826,0.9277408637873754,0.9596219931271478,stratified source-aware row split
+Multidomain,Spark MLlib,injection,573,370,0.9513513513513514,0.6143106457242583,0.7465535524920467,stratified source-aware row split
+Multidomain,Spark MLlib,mitm,7,0,0.0,0.0,0.0,stratified source-aware row split
+Multidomain,Spark MLlib,password,1817,1432,0.9825418994413407,0.7743533296642818,0.8661126500461681,stratified source-aware row split
+Multidomain,Spark MLlib,ransomware,82,10,0.9,0.10975609756097561,0.1956521739130435,stratified source-aware row split
+Multidomain,Spark MLlib,scanning,5781,5775,0.9935930735930736,0.9925618405120221,0.9930771893388716,stratified source-aware row split
+Multidomain,Spark MLlib,xss,1751,1757,0.9561752988047809,0.9594517418617933,0.9578107183580388,stratified source-aware row split
+Multidomain,scikit-learn,backdoor,1354,1846,0.6787648970747562,0.9254062038404727,0.783125,stratified source-aware row split
+Multidomain,scikit-learn,ddos,5274,4872,0.9692118226600985,0.8953356086461889,0.9308101714961561,stratified source-aware row split
+Multidomain,scikit-learn,dos,2408,2285,0.9864332603938731,0.936046511627907,0.9605795866183677,stratified source-aware row split
+Multidomain,scikit-learn,injection,573,791,0.6156763590391909,0.849912739965096,0.7140762463343109,stratified source-aware row split
+Multidomain,scikit-learn,mitm,7,4,0.75,0.42857142857142855,0.5454545454545454,stratified source-aware row split
+Multidomain,scikit-learn,password,1817,1886,0.8038176033934252,0.8343423225096313,0.8187955711585202,stratified source-aware row split
+Multidomain,scikit-learn,ransomware,82,254,0.31496062992125984,0.975609756097561,0.4761904761904762,stratified source-aware row split
+Multidomain,scikit-learn,scanning,5781,5839,0.9753382428498031,0.9851236810240442,0.9802065404475044,stratified source-aware row split
+Multidomain,scikit-learn,xss,1751,1769,0.9321650650084794,0.941747572815534,0.9369318181818181,stratified source-aware row split
+IoT,Spark MLlib,backdoor,436,124,0.9516129032258065,0.2706422018348624,0.4214285714285714,stratified source-aware row split
+IoT,Spark MLlib,ddos,73,0,0.0,0.0,0.0,stratified source-aware row split
+IoT,Spark MLlib,injection,85,6,1.0,0.07058823529411765,0.13186813186813187,stratified source-aware row split
+IoT,Spark MLlib,password,218,21,1.0,0.0963302752293578,0.17573221757322177,stratified source-aware row split
+IoT,Spark MLlib,ransomware,25,0,0.0,0.0,0.0,stratified source-aware row split
+IoT,Spark MLlib,scanning,3,0,0.0,0.0,0.0,stratified source-aware row split
+IoT,Spark MLlib,xss,9,0,0.0,0.0,0.0,stratified source-aware row split
+IoT,scikit-learn,backdoor,436,539,0.588126159554731,0.7270642201834863,0.6502564102564103,stratified source-aware row split
+IoT,scikit-learn,ddos,73,248,0.24193548387096775,0.821917808219178,0.37383177570093457,stratified source-aware row split
+IoT,scikit-learn,injection,85,199,0.4271356783919598,1.0,0.5985915492957747,stratified source-aware row split
+IoT,scikit-learn,password,218,287,0.6062717770034843,0.7981651376146789,0.6891089108910892,stratified source-aware row split
+IoT,scikit-learn,ransomware,25,89,0.24719101123595505,0.88,0.38596491228070173,stratified source-aware row split
+IoT,scikit-learn,scanning,3,6,0.16666666666666666,0.3333333333333333,0.2222222222222222,stratified source-aware row split
+IoT,scikit-learn,xss,9,19,0.3157894736842105,0.6666666666666666,0.42857142857142855,stratified source-aware row split
+Linux,Spark MLlib,ddos,134,28,0.5357142857142857,0.11194029850746269,0.18518518518518517,stratified source-aware row split
+Linux,Spark MLlib,dos,143,10,0.2,0.013986013986013986,0.0261437908496732,stratified source-aware row split
+Linux,Spark MLlib,injection,92,2,1.0,0.021739130434782608,0.042553191489361694,stratified source-aware row split
+Linux,Spark MLlib,password,82,5,0.4,0.024390243902439025,0.04597701149425288,stratified source-aware row split
+Linux,Spark MLlib,scanning,29,7,0.2857142857142857,0.06896551724137931,0.1111111111111111,stratified source-aware row split
+Linux,Spark MLlib,xss,30,1,0.0,0.0,0.0,stratified source-aware row split
+Linux,scikit-learn,ddos,134,263,0.20532319391634982,0.40298507462686567,0.27204030226700254,stratified source-aware row split
+Linux,scikit-learn,dos,143,101,0.27722772277227725,0.1958041958041958,0.22950819672131145,stratified source-aware row split
+Linux,scikit-learn,injection,92,224,0.12946428571428573,0.31521739130434784,0.18354430379746836,stratified source-aware row split
+Linux,scikit-learn,password,82,121,0.23140495867768596,0.34146341463414637,0.2758620689655173,stratified source-aware row split
+Linux,scikit-learn,scanning,29,88,0.11363636363636363,0.3448275862068966,0.17094017094017094,stratified source-aware row split
+Linux,scikit-learn,xss,30,39,0.15384615384615385,0.2,0.17391304347826086,stratified source-aware row split
+Network,Spark MLlib,backdoor,876,882,0.9863945578231292,0.9931506849315068,0.9897610921501707,stratified source-aware row split
+Network,Spark MLlib,ddos,4929,4982,0.9871537535126456,0.9977683100020288,0.9924326505902533,stratified source-aware row split
+Network,Spark MLlib,dos,2284,2292,0.9925828970331588,0.9960595446584939,0.9943181818181819,stratified source-aware row split
+Network,Spark MLlib,injection,368,371,0.9568733153638814,0.9646739130434783,0.9607577807848445,stratified source-aware row split
+Network,Spark MLlib,mitm,1,0,0.0,0.0,0.0,stratified source-aware row split
+Network,Spark MLlib,password,1353,1353,0.9844789356984479,0.9844789356984479,0.9844789356984479,stratified source-aware row split
+Network,Spark MLlib,ransomware,47,15,0.9333333333333333,0.2978723404255319,0.4516129032258065,stratified source-aware row split
+Network,Spark MLlib,scanning,5694,5727,0.9938885978697398,0.9996487530734106,0.996760353734349,stratified source-aware row split
+Network,Spark MLlib,xss,1713,1757,0.9698349459305634,0.9947460595446584,0.9821325648414985,stratified source-aware row split
+Network,scikit-learn,backdoor,876,881,0.9886492622020431,0.9942922374429224,0.9914627205463858,stratified source-aware row split
+Network,scikit-learn,ddos,4929,4313,0.9684674240667749,0.8474335565023331,0.9039169011036572,stratified source-aware row split
+Network,scikit-learn,dos,2284,2283,0.9982479194042926,0.9978108581436077,0.9980293409240201,stratified source-aware row split
+Network,scikit-learn,injection,368,444,0.795045045045045,0.9592391304347826,0.8694581280788176,stratified source-aware row split
+Network,scikit-learn,mitm,1,1,1.0,1.0,1.0,stratified source-aware row split
+Network,scikit-learn,password,1353,1904,0.664390756302521,0.9349593495934959,0.776788455634019,stratified source-aware row split
+Network,scikit-learn,ransomware,47,82,0.524390243902439,0.9148936170212766,0.6666666666666667,stratified source-aware row split
+Network,scikit-learn,scanning,5694,5716,0.9763820853743876,0.9801545486476994,0.9782646801051709,stratified source-aware row split
+Network,scikit-learn,xss,1713,1730,0.9184971098265896,0.9276123759486281,0.9230322393261692,stratified source-aware row split
+Windows,Spark MLlib,backdoor,50,48,0.9791666666666666,0.94,0.9591836734693877,stratified source-aware row split
+Windows,Spark MLlib,ddos,159,160,0.99375,1.0,0.9968652037617556,stratified source-aware row split
+Windows,Spark MLlib,dos,9,9,0.6666666666666666,0.6666666666666666,0.6666666666666666,stratified source-aware row split
+Windows,Spark MLlib,injection,38,38,0.9473684210526315,0.9473684210526315,0.9473684210526315,stratified source-aware row split
+Windows,Spark MLlib,password,115,114,0.9912280701754386,0.9826086956521739,0.9868995633187774,stratified source-aware row split
 Windows,Spark MLlib,ransomware,1,1,1.0,1.0,1.0,stratified source-aware row split
-Windows,Spark MLlib,scanning,13,13,0.7692307692307693,0.7692307692307693,0.7692307692307693,stratified source-aware row split
+Windows,Spark MLlib,scanning,15,15,0.8666666666666667,0.8666666666666667,0.8666666666666667,stratified source-aware row split
 Windows,Spark MLlib,xss,36,33,0.9696969696969697,0.8888888888888888,0.927536231884058,stratified source-aware row split
-Windows,scikit-learn,backdoor,53,53,1.0,1.0,1.0,stratified source-aware row split
-Windows,scikit-learn,ddos,158,159,0.9937106918238994,1.0,0.9968454258675079,stratified source-aware row split
+Windows,scikit-learn,backdoor,50,50,0.98,0.98,0.98,stratified source-aware row split
+Windows,scikit-learn,ddos,159,160,0.99375,1.0,0.9968652037617556,stratified source-aware row split
 Windows,scikit-learn,dos,9,13,0.6923076923076923,1.0,0.8181818181818181,stratified source-aware row split
-Windows,scikit-learn,injection,40,42,0.9523809523809523,1.0,0.975609756097561,stratified source-aware row split
-Windows,scikit-learn,password,113,111,0.990990990990991,0.9734513274336283,0.9821428571428571,stratified source-aware row split
+Windows,scikit-learn,injection,38,41,0.926829268292683,1.0,0.9620253164556963,stratified source-aware row split
+Windows,scikit-learn,password,115,114,0.9912280701754386,0.9826086956521739,0.9868995633187774,stratified source-aware row split
 Windows,scikit-learn,ransomware,1,1,1.0,1.0,1.0,stratified source-aware row split
-Windows,scikit-learn,scanning,13,17,0.5882352941176471,0.7692307692307693,0.6666666666666667,stratified source-aware row split
+Windows,scikit-learn,scanning,15,17,0.7647058823529411,0.8666666666666667,0.8125,stratified source-aware row split
 Windows,scikit-learn,xss,36,35,0.9714285714285714,0.9444444444444444,0.9577464788732395,stratified source-aware row split
