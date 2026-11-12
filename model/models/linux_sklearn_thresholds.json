@@ -2,9 +2,9 @@
   "scope": "per_source",
   "thresholds": {
     "Linux_process_1.csv": 0.2807643686354725,
-    "Linux_process_2.csv": 0.4032205967520366,
+    "Linux_process_2.csv": 0.4032205967520367,
     "linux_disk_2.csv": 0.4169470067505039,
     "linux_memory1.csv": 0.3586664211576658,
-    "linux_memory2.csv": 0.5674540390319839
+    "linux_memory2.csv": 0.567454039031984
   }
 }
